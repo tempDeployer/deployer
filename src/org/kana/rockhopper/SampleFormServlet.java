@@ -77,10 +77,20 @@ public class SampleFormServlet extends HttpServlet {
 			
 			ChefClient chefClient = new ChefClient();
 			System.out.println(chefClient.getCookbooks());
-			System.out.println(chefClient.getRoles());
-			System.out.println(chefClient.getEnvironments());
-			System.out.println(chefClient.getNodes());
-			System.out.println(chefClient.getNode("WINDOWS194.kana-test.com"));
+			//System.out.println(chefClient.getRoles());
+			//System.out.println(chefClient.getEnvironments());
+			//System.out.println(chefClient.getNodes());
+			//System.out.println(chefClient.getNode("WINDOWS194.kana-test.com"));
+			
+			//Updating a Node
+			String updateMessage = "{\"name\": \"WINDOWS194.kana-test.com\","
+									+ "\"chef_type\": \"node\","
+									+ "\"json_class\": \"Chef::Node\","
+									+ "\"run_list\": [\"recipe[ke_starter]\",\"role[ke]\"]"
+									+ "}";
+			System.out.println(updateMessage);
+			
+			System.out.println(chefClient.updateNode("WINDOWS194.kana-test.com", updateMessage));
 
 		} catch (Exception e) {
 			e.printStackTrace();
