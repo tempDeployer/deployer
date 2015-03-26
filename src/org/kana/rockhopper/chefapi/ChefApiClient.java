@@ -4,10 +4,12 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 
 import org.kana.rockhopper.chefapi.method.Delete;
 import org.kana.rockhopper.chefapi.method.Get;
 import org.kana.rockhopper.chefapi.method.Post;
+import org.kana.rockhopper.chefapi.method.Put;
 
 public class ChefApiClient {
 	private String endpoint;
@@ -50,6 +52,13 @@ public class ChefApiClient {
 	    del.setPemPath(pemPath);
 	    del.setUserId(userId);
 	    return del;
+	}
+	
+	public Put put(String path) {
+		Put put = new Put(new PutMethod(endpoint+path));
+		put.setPemPath(pemPath);
+		put.setUserId(userId);
+	    return put;
 	}
 	
 	public Header[] buildHeaders(){

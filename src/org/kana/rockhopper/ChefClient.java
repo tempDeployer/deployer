@@ -14,12 +14,24 @@ public class ChefClient {
 		return cac.get("/cookbooks").execute().getResponseBodyAsString();
 	}
 	
+	public String getCookbook(String cookbookName) {
+		return cac.get("/cookbooks/"+cookbookName).execute().getResponseBodyAsString();
+	}
+	
 	public String getRoles() {
 		return cac.get("/roles").execute().getResponseBodyAsString();
 	}
 	
+	public String getRole(String roleName) {
+		return cac.get("/roles/"+roleName).execute().getResponseBodyAsString();
+	}
+	
 	public String getEnvironments() {
 		return cac.get("/environments").execute().getResponseBodyAsString();
+	}
+	
+	public String getEnvironment(String environmentName) {
+		return cac.get("/environments/"+environmentName).execute().getResponseBodyAsString();
 	}
 	
 	public String getNodes() {
@@ -28,6 +40,10 @@ public class ChefClient {
 	
 	public String getNode(String nodeName) {
 		return cac.get("/nodes/"+nodeName).execute().getResponseBodyAsString();
+	}
+	
+	public String updateNode(String nodeName, String updateMessage) {
+		return cac.put("/nodes/"+nodeName).body(updateMessage).execute().getResponseBodyAsString();
 	}
 
 }
