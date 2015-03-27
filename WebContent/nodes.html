@@ -24,24 +24,11 @@
 
   <body>
 
-    <div class="container" id="thing">
+    <div class="container">
     
     <div class="page-header">
     <h1>Chef Orchestrator</h1>
     </div>
-    
-    <div class="container" id="stuff">
-    
-    <p>Node Information: </p>
-      <div class="row">
-        <div class="col-md-12">
-        Some Info
-        <br><br/><br><br/><br><br/><br>
-        some more info
-        </div>
-      </div>
-    
-    <br><br/><br><br/><br><br/><br><br/><br><br/><br><br/><br><br/>
     
     <div class="container" id="node-info">
     <p>Node Information: </p>
@@ -54,31 +41,25 @@
       </div>
     </div>
     
-    </div>
+    <!-- <br><br/><br><br/><br><br/>
     
-    <br><br/><br><br/><br><br/>
-    
-    <!-- <button type="button" class="btn btn-default">
+    <button type="button" class="btn btn-default">
       <span style="font-size:8em;" class="glyphicon glyphicon glyphicon-plus"></span>
     </button> # onclick='createGrid()' "/../DeployerApplication/test1.html" -->
     
     <script type="text/javascript">
     function createGrid()
     {
-    	//$("#node-info").append("#stuff");
-    	//return false;
-    	//window.alert(11);
-    	var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
-        var txt3 = document.createElement("p");
-        txt3.innerHTML = "Text.";               // Create text with DOM
-        $("body").append(txt2, txt3);     // Append new elements
+        var grid = "<p>Node Information: <\/p> <div class=\"row\"> <div class=\"col-md-12\"> Some Info <br><br/><br><br/><br><br/><br> some more info </div> </div>";
+      	$(grid).appendTo($.find("#node-info"));
+        return false;
     }
     </script>
     
-    <button type="button" onClick='createGrid()' class="btn btn-default">
-    </button>
+    <!-- <button type="button" onClick='createGrid()' class="btn btn-default">
+    </button> -->
     
-    <a href="#" onclick='createGrid()'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a>
+    <a href="" onclick='return createGrid();'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a>
     
     </div>
     
