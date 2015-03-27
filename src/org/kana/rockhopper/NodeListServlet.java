@@ -139,7 +139,6 @@ private JSONObject getNodeDetails(String nodeJson) {
 		ObjectMapper objMapper = new ObjectMapper();
 		JSONArray jsonArrayNodes = new JSONArray();
 		JSONObject jsonObj = new JSONObject();
-		NodePojo nodePojo = new NodePojo();
 		JSONObject jsonObjForUI = new JSONObject();
 		JSONObject jsonNodes = new JSONObject();
 		
