@@ -3,8 +3,7 @@ package org.kana.rockhopper;
 import org.kana.rockhopper.chefapi.ChefApiClient;
 
 public class ChefClient {
-  
-  
+	
 	private static final String PEM_FILE_PATH = "C:/Users/gcoia/Work/centos69repo/.chef/gcoia.pem";
 	private static final String CHEF_USER = "gcoia";
 	private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/team";
@@ -49,6 +48,10 @@ public class ChefClient {
 	
 	public int deleteNode(String nodeName) {
 		return cac.delete("/nodes/"+nodeName).execute().getReturnCode();
+	}
+	
+	public int createRole(String roleJson) {
+		return cac.post("/roles").body(roleJson).execute().getReturnCode();
 	}
 
 }
