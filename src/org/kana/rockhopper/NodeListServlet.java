@@ -16,6 +16,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kana.rockhopper.chef.NodePojo;
+import org.kana.rockhopper.chef.SimpleNodePojo;
 
 
 
@@ -151,43 +152,19 @@ private JSONObject getNodeDetails(String nodeJson) {
 			    
 				String nodeIdentifier = (String) iterator.next();
 			    jsonObj = new JSONObject(chefClient.getNode(nodeIdentifier));
-				nodePojo = new NodePojo();
+				SimpleNodePojo snp = new SimpleNodePojo();
 				
-				nodePojo.setName(jsonObj.getString("name"));
-				nodePojo.setChef_type(jsonObj.getString("chef_type"));
-				nodePojo.setChef_environment(jsonObj.getString("chef_environment"));
-				nodePojo.setNodeRunList(jsonObj.getJSONArray("run_list").toString());
+				snp.setName(jsonObj.getString("name"));
+				snp.setNodeRunList(jsonObj.getJSONArray("run_list").toString());
 				
 				if(jsonObj.getJSONObject("automatic") != null && jsonObj.getJSONObject("automatic").length() > 0) {
-					if(jsonObj.getJSONObject("automatic").getString("uptime") != null) {
-						nodePojo.setUptime(jsonObj.getJSONObject("automatic").getString("uptime"));
-					}
-					else nodePojo.setUptime("");
-					
-					nodePojo.setHostname(jsonObj.getJSONObject("automatic").getString("hostname"));
-					nodePojo.setFqdn(jsonObj.getJSONObject("automatic").getString("fqdn"));
-					nodePojo.setOs_version(jsonObj.getJSONObject("automatic").getString("os_version"));
-					nodePojo.setPlatform_version(jsonObj.getJSONObject("automatic").getString("platform_version"));
-					nodePojo.setCpu_total(jsonObj.getJSONObject("automatic").getJSONObject("cpu").getInt("total"));
-					nodePojo.setPlatform(jsonObj.getJSONObject("automatic").getString("platform"));
-					nodePojo.setOs(jsonObj.getJSONObject("automatic").getString("os"));
-					nodePojo.setIpaddress(jsonObj.getJSONObject("automatic").getString("ipaddress"));
-					nodePojo.setRecipes(jsonObj.getJSONObject("automatic").getJSONArray("recipes").toString());
+					snp.setIpaddress(jsonObj.getJSONObject("automatic").getString("ipaddress"));
 				}
 				else {
-					nodePojo.setUptime("Node bootstrapped yet");
-					nodePojo.setHostname("Node bootstrapped yet");
-					nodePojo.setFqdn("Node bootstrapped yet");
-					nodePojo.setOs_version("Node bootstrapped yet");
-					nodePojo.setPlatform_version("Node bootstrapped yet");
-					nodePojo.setCpu_total(0);
-					nodePojo.setPlatform("Node bootstrapped yet");
-					nodePojo.setOs("Node bootstrapped yet");
-					nodePojo.setIpaddress("Node bootstrapped yet");
-					nodePojo.setRecipes("Node bootstrapped yet");
+					snp.setIpaddress("Node bootstrapped yet");
 					
 				}
-				jsonObjForUI = new JSONObject(objMapper.writer().withDefaultPrettyPrinter().writeValueAsString(nodePojo));
+				jsonObjForUI = new JSONObject(objMapper.writer().withDefaultPrettyPrinter().writeValueAsString(snp));
 				jsonArrayNodes.put(jsonObjForUI);
 			    
 			}
