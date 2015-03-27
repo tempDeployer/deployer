@@ -26,12 +26,28 @@ public class ChefClient {
 		return cac.get("/roles/"+roleName).execute().getResponseBodyAsString();
 	}
 	
+	public int createRole(String roleJson) {
+		return cac.post("/roles").body(roleJson).execute().getReturnCode();
+	}
+	
+	public int deleteRole(String roleName) {
+		return cac.delete("/roles/"+roleName).execute().getReturnCode();
+	}
+	
 	public String getEnvironments() {
 		return cac.get("/environments").execute().getResponseBodyAsString();
 	}
 	
 	public String getEnvironment(String environmentName) {
 		return cac.get("/environments/"+environmentName).execute().getResponseBodyAsString();
+	}
+	
+	public int createEnvironment(String environmentJson) {
+		return cac.post("/environments").body(environmentJson).execute().getReturnCode();
+	}
+	
+	public int deleteEnvironment(String environmentName) {
+		return cac.delete("/environments/"+environmentName).execute().getReturnCode();
 	}
 	
 	public String getNodes() {
@@ -50,8 +66,9 @@ public class ChefClient {
 		return cac.delete("/nodes/"+nodeName).execute().getReturnCode();
 	}
 	
-	public int createRole(String roleJson) {
-		return cac.post("/roles").body(roleJson).execute().getReturnCode();
+	//placeholder for bootstrap code
+	public int bootstrapNode(String nodeName, String hostname, String userName, String password, String runList) {
+		return 0;
 	}
 
 }
