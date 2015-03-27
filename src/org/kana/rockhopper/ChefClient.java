@@ -3,8 +3,6 @@ package org.kana.rockhopper;
 import org.kana.rockhopper.chefapi.ChefApiClient;
 
 public class ChefClient {
-  
-  
 	
 	private static final String PEM_FILE_PATH = "C:/Users/gcoia/Work/centos69repo/.chef/gcoia.pem";
 	private static final String CHEF_USER = "gcoia";
