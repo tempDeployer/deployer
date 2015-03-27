@@ -23,24 +23,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Servlet implementation class SampleFormServlet
+ * @author asarker
+ * Servlet implementation class used by the home page
  */
-@WebServlet("/SampleFormServlet")
-public class SampleFormServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public SampleFormServlet() {
+@WebServlet("/NodesServlet")
+public class NodesServlet extends HttpServlet {
+	
+	public NodesServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -50,59 +42,14 @@ public class SampleFormServlet extends HttpServlet {
 	 * code to make the service call
 	 */
 	private void makeWebServiceCall() {
-		HttpClient httpclient = new DefaultHttpClient();
 		try {
-			// specify the host, protocol, and port
-			HttpHost target = new HttpHost("weather.yahooapis.com", 80, "http");
-
-			// specify the get request
-			HttpGet getRequest = new HttpGet("/forecastrss?p=80020&u=f");
-
-			System.out.println("executing request to " + target);
-
-			HttpResponse httpResponse = httpclient.execute(target, getRequest);
-			HttpEntity entity = httpResponse.getEntity();
-
-			System.out.println("----------------------------------------");
-			System.out.println(httpResponse.getStatusLine());
-			Header[] headers = httpResponse.getAllHeaders();
-			for (int i = 0; i < headers.length; i++) {
-				System.out.println(headers[i]);
-			}
-			System.out.println("----------------------------------------");
-
-			if (entity != null) {
-				System.out.println(EntityUtils.toString(entity));
-			}
-			
 			ChefClient chefClient = new ChefClient();
 			JSONObject x = new JSONObject(chefClient.getNodes());
+			System.out.println(x.toString());
 			System.out.println(chefClient.getNodes());
-			System.out.println(chefClient.getCookbooks());
-			//System.out.println(chefClient.getRoles());
-			//System.out.println(chefClient.getEnvironments());
-			//System.out.println(chefClient.getNodes());
-			//System.out.println(chefClient.getNode("WINDOWS194.kana-test.com"));
-			
-			//Updating a Node
-			String updateMessage = "{\"name\": \"WINDOWS194.kana-test.com\","
-									+ "\"chef_type\": \"node\","
-									+ "\"json_class\": \"Chef::Node\","
-									+ "\"run_list\": [\"recipe[ke_starter]\",\"role[ke]\"]"
-									+ "}";
-			System.out.println(updateMessage);
-			
-			System.out.println(chefClient.updateNode("WINDOWS194.kana-test.com", updateMessage));
-
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// When HttpClient instance is no longer needed,
-			// shut down the connection manager to ensure
-			// immediate deallocation of all system resources
-			httpclient.getConnectionManager().shutdown();
+			System.out.println("An error occurred.");
 		}
-
 	}
 
 	/*
@@ -130,16 +77,17 @@ public class SampleFormServlet extends HttpServlet {
 		request.setCharacterEncoding("utf8");
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
+		ChefClient chefClient = new ChefClient();
 		JSONObject obj = new JSONObject();
-		System.out.println("Done");
 		try {
-			obj.put("message", "hello from " + request.getParameter("name"));
+			obj = new JSONObject(chefClient.getNodes());
 		} catch (JSONException e) {
-			e.printStackTrace();
+			System.out.println(e.toString());
 		}
-		//
+		System.out.println("Done");
 		out.print(obj);
 	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -152,5 +100,4 @@ public class SampleFormServlet extends HttpServlet {
 		makeWebServiceCall();
 		createJsonAndReturn(request, response);
 	}
-
 }

@@ -31,6 +31,28 @@
     </div>
     
     <div class="container" id="node-info">
+    <script type="text/javascript">
+    function createGrids(nodeName)
+    {
+    	var grid = "<p>Node Information: <\/p> <div class=\"row\"> <div class=\"col-md-12\"> Some Info <br><br/><br>" + nodeName + "<br/><br><br/><br> some more info </div> </div>";
+      	$(grid).appendTo($.find("#node-info"));
+    }
+    
+    function callServer() {
+		$.post("NodesServlet", function(data) {
+			var jsonData = Object.keys(data);
+			var stuff = "";
+			for (key in jsonData) {
+				stuff += jsonData[key];
+				createGrids(jsonData[key]);
+			}
+			//document.getElementById("serverResp").value = stuff;
+			//alert("Data Loaded: " + stuff);
+		});
+	}
+    
+    callServer();
+    </script>
     <p>Node Information: </p>
       <div class="row">
         <div class="col-md-12">
@@ -58,6 +80,25 @@
     
     <!-- <button type="button" onClick='createGrid()' class="btn btn-default">
     </button> -->
+    
+    Name :
+	<input type="text" id="nameValue" size="20" />
+	<button type="button" onclick="callServer()">Call server</button>
+	Server response :
+	<input type="text" id="serverResp" size="40" />
+	<script type="text/javascript">
+		function callServer() {
+			$.post("NodesServlet", function(data) {
+				var jsonData = Object.keys(data);
+				var stuff = "";
+				for (key in jsonData) {
+					stuff += jsonData[key];
+				}
+				document.getElementById("serverResp").value = stuff;
+				alert("Data Loaded: " + stuff);
+			});
+		}
+	</script>
     
     <a href="" onclick='return createGrid();'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a>
     
