@@ -1,0 +1,19 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #B0E0E6;
+}
+
+.glyphicon-plus {
+  bottom: 0px;
+  display: inline;
+  float: right;
+  margin-top: -8px;
+}
+
+.btn-default {
+  bottom: 0px;
+  display: inline;
+  float: right;
+  margin-top: -8px;
+}
