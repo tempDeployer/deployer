@@ -45,5 +45,9 @@ public class ChefClient {
 	public String updateNode(String nodeName, String updateMessage) {
 		return cac.put("/nodes/"+nodeName).body(updateMessage).execute().getResponseBodyAsString();
 	}
+	
+	public int deleteNode(String nodeName) {
+		return cac.delete("/nodes/"+nodeName).execute().getReturnCode();
+	}
 
 }
