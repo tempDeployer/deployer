@@ -13,7 +13,7 @@
 	<input type="text" id="serverResp" size="40" />
 	<script type="text/javascript">
 		function callServer() {
-			$.post("NodeListServlet", {
+			$.get("NodeListServlet", {
 				name : document.getElementById("nameValue").value
 			}, function(data) {
 				document.getElementById("serverResp").value = data['message'];
