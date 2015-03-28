@@ -9,12 +9,15 @@
 <!--  markItUp! toolbar skin -->
 <link rel="stylesheet" type="text/css"
 	href="markitup/sets/default/style.css">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+	
 <!-- jQuery -->
 <script src="jquery-2.1.3.js"></script>
 <script type="text/javascript" src="markitup/jquery.markitup.js"></script>
 <!-- markItUp! toolbar settings -->
 <script type="text/javascript" src="markitup/sets/default/set.js"></script>
-
+<link href="spinner/style.css" rel="stylesheet">
+<script src="spinner/jquery-loader.js" type="text/javascript"></script>
 <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
 <script src="jquery-ui/jquery-ui.js"></script>
 <style>
@@ -22,6 +25,10 @@ body {
 	font-size: 62.5%;
 }
 
+.right {
+    position: absolute;
+    right: 5px;
+}
 label,input {
 	display: block;
 }
@@ -46,7 +53,10 @@ h1 {
 .ui-dialog .ui-state-error {
 	padding: .3em;
 }
-
+html {
+	font-size:20px;
+	-webkit-tap-highlight-color:rgba(0,0,0,0)
+}
 div#nodes-contain {
 	margin: 20px 0;
 }
@@ -70,8 +80,12 @@ div#nodes-contain table td,div#nodes-contain table th {
 </style>
 
 <script>
+	function bootStrapNode(node){
+		alert('called');
+	}
 	function moreDetails(node){
 		var nodeName = $(node).attr('nodeName');
+		$('#nodes-contain').loader($data);
 		$.post("NodeListServlet", {
 			nodeName : nodeName}, 
 			function(nodeJson) {
@@ -81,13 +95,27 @@ div#nodes-contain table td,div#nodes-contain table th {
 			
 				}
 			$('#node-details').append(html);
-			dialogDetails.dialog("open");		
-			});
+			dialogDetails.dialog("open");
+			 $.loader.close(true);
+
+		});
+	}
+	function runRecipies(node){
+		alert($(node).attr('nodeName'));
 	}
 	$(function() {
+		 $data = {
+	                autoCheck: 32,
+	                size: 16,  
+	                bgColor: '#FFF',   
+	                bgOpacity: 0.6,    
+	                fontColor: false,  
+	                isOnly: true
+	     };
 		var dialog, form, nodesArray;
 		$('#roleText').markItUp(mySettings);
 		var self = this;
+		$('#nodes-contain').loader($data);
 		$.get("NodeListServlet", {}, function(nodesJson) {
 			nodesArray = nodesJson['jsonArrayNodes'];
 			for (var i = 0; i < nodesArray.length; i++) {
@@ -96,8 +124,10 @@ div#nodes-contain table td,div#nodes-contain table th {
 						"<tr>" + "<td>" + node.name + "</td>" + "<td>"
 								+ node.ipaddress + "</td>" + "<td>"
 								+ node.nodeRunList + "</td>" + "<td>"
-								+ "<a onclick=\"moreDetails(this)\" index="+ i +" nodeName=" +node.name+" style=\"cursor: pointer; cursor: hand;\">*click here*</a>" + "</td>" + "</tr>");
+								+ "<a onclick=\"moreDetails(this)\" title=\"Show more details\" index="+ i +" nodeName=" +node.name+" class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>" + "</td>" + "<td>"
+								+ "<a onclick=\"runRecipies(this)\" title=\"Run\" index="+ i +" nodeName=" +node.name+" class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>" + "</td>" + "</tr>");
 			}
+			 $.loader.close(true);
 		});
 		function createRole() {
 			//$('#markItUp').value
@@ -168,6 +198,7 @@ div#nodes-contain table td,div#nodes-contain table th {
 					<th>IP</th>
 					<th>RunList</th>
 					<th>More Details</th>
+					<th>Run</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -199,5 +230,8 @@ div#nodes-contain table td,div#nodes-contain table th {
 		</form>
 	</div>
 	<button id="create-role">Create new role</button>
+	<span class="right" id="plusButton">
+	    <a title="Import Node" id="createNode" onclick="bootStrapNode(this)" class="glyphicon glyphicon-plus" style="font-size:2em;"></a>
+    </span>
 </body>
 </html>
