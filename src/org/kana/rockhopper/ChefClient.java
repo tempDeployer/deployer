@@ -3,14 +3,13 @@ package org.kana.rockhopper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kana.rockhopper.chefapi.ChefApiClient;
-import org.kana.rockhopper.chefapi.method.Get;
 
 public class ChefClient {
 
 	//private static final String PEM_FILE_PATH = "C:/Users/gcoia/Work/centos69repo/.chef/gcoia.pem";
 	//private static final String CHEF_USER = "gcoia";
 	//private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/team";
-	
+  
 	private static final String PEM_FILE_PATH = "C:/crepo/.chef/shrads.pem";
 	private static final String CHEF_USER = "shrads";
 	private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/team";
@@ -71,11 +70,7 @@ public class ChefClient {
 	}
 	
 	public String getNode(String nodeName) {
-		Get get = (Get) cac.get("/nodes/"+nodeName).execute();
-		if (get.getReturnCode() == 200) {
-			return get.getResponseBodyAsString();
-		}
-		return null;
+		return cac.get("/nodes/"+nodeName).execute().getResponseBodyAsString();
 	}
 	
 	public String updateNode(String nodeName, String updateMessage) {

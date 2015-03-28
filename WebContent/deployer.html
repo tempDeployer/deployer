@@ -81,7 +81,7 @@ div#nodes-contain table td,div#nodes-contain table th {
 
 <script>
 	function bootStrapNode(node){
-		alert('called');
+		//alert('called');
 	}
 	function moreDetails(node){
 		var nodeName = $(node).attr('nodeName');
@@ -231,7 +231,7 @@ div#nodes-contain table td,div#nodes-contain table th {
 	</div>
 	<button id="create-role">Create new role</button>
 	<span class="right" id="plusButton">
-	    <a title="Import Node" id="createNode" onclick="bootStrapNode(this)" class="glyphicon glyphicon-plus" style="font-size:2em; cursor: pointer; cursor: hand;"></a>
+	    <a title="Import Node" href="bootstrap.html" id="createNode" onclick="bootStrapNode(this)" class="glyphicon glyphicon-plus" style="font-size:2em; cursor: pointer; cursor: hand;"></a>
     </span>
 </body>
 </html>
