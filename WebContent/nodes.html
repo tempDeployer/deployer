@@ -32,14 +32,23 @@
     
     <div class="container" id="node-info">
     <script type="text/javascript">
-    function createGrids(nodeName)
+    function createGrids(nodeName, IP, runList)
     {
     	var grid = "<p>Node Information: <\/p> <div class=\"row\"> <div class=\"col-md-12\"> Some Info <br><br/><br>" + nodeName + "<br/><br><br/><br> some more info </div> </div>";
-      	$(grid).appendTo($.find("#node-info"));
+    	var grid1 = "<div class=\"row\"> <div class=\"col-md-2\">" + nodeName + "</div> <div class=\"col-md-2\">" + IP + "</div> <div class=\"col-md-6\">" + runList + "</div> <div class=\"col-md-1\"> </div> <div class=\"col-md-1\">Run</div> </div>";
+    	var grid2 = "<div class=\"row\"> <div class=\"col-md-2\">" + nodeName + "</div> <div class=\"col-md-2\">" + IP + "</div> <div class=\"col-md-6\">" + runList + "</div> <div class=\"col-md-1\"> <button type=\"button\" class=\"btn btn-default\"> <span class=\"glyphicon glyphicon-info-sign\"></span> </button> </div> <div class=\"col-md-1\">Run</div> </div>";
+        var grid3 = "<div class=\"row\"> <div class=\"col-md-2\">" + nodeName + "</div> <div class=\"col-md-2\">" + IP + "</div> <div class=\"col-md-6\">" + runList + "</div> <div class=\"col-md-1\"> <a href=\"\" onclick=\'\'><span style=\"font-size:8em;\" class=\"glyphicon-info-sign\"></span></a> </div> <div class=\"col-md-1\">Run</div> </div>";
+    	$(grid2).appendTo($.find("#node-info"));
+    }
+    
+    function addPlus()
+    {
+    	var plus = "<a href=\"\" onclick=\'return createGrid();\'><span style=\"font-size:8em;\" class=\"glyphicon glyphicon-plus\"></span></a>";
+    	$(plus).appendTo($.find("#node-info"));
     }
     
     function callServer() {
-		$.post("NodesServlet", function(data) {
+		/*$.post("NodesServlet", function(data) {
 			var jsonData = Object.keys(data);
 			var stuff = "";
 			for (key in jsonData) {
@@ -48,12 +57,30 @@
 			}
 			//document.getElementById("serverResp").value = stuff;
 			//alert("Data Loaded: " + stuff);
+		});*/
+		
+		$.post("NodeListServlet", {}, function(nodesArray) {
+			var nodes = nodesArray['message'];
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				createGrids(node.name, node.ipaddress, node.nodeRunList);
+			}
 		});
 	}
     
     callServer();
+    //addPlus();
     </script>
-    <p>Node Information: </p>
+    
+    <div class="row">
+        <div class="col-md-2">Node Name</div>
+        <div class="col-md-2">IP</div>
+        <div class="col-md-6">Run List</div>
+        <div class="col-md-1">More Info</div>
+        <div class="col-md-1">Run</div>
+    </div>
+    
+    <!-- <p>Node Information: </p>
       <div class="row">
         <div class="col-md-12">
         Some Info
@@ -61,7 +88,7 @@
         some more info
         </div>
       </div>
-    </div>
+    </div> -->
     
     <!-- <br><br/><br><br/><br><br/>
     
@@ -81,7 +108,7 @@
     <!-- <button type="button" onClick='createGrid()' class="btn btn-default">
     </button> -->
     
-    Name :
+    <!-- Name :
 	<input type="text" id="nameValue" size="20" />
 	<button type="button" onclick="callServer()">Call server</button>
 	Server response :
@@ -98,9 +125,15 @@
 				alert("Data Loaded: " + stuff);
 			});
 		}
-	</script>
+	</script> -->
     
+    <!-- <a href="" onclick='return createGrid();'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a> -->
+    
+    </div>
+    
+    <div class="container" id="plusButton">
     <a href="" onclick='return createGrid();'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a>
+    </div>
     
     </div>
     

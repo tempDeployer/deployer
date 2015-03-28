@@ -69,18 +69,35 @@ div#nodes-contain table td,div#nodes-contain table th {
 	padding: 0.3em;
 }
 </style>
+
 <script>
+	function moreDetails(node){
+		var nodeName = $(node).attr('nodeName');
+		$.post("NodeListServlet", {
+			nodeName : nodeName}, 
+			function(nodeJson) {
+			 var html = '';
+				for (key in nodeJson) {
+				html += '<div><span>' + key + ' : </span><span>' + nodeJson[key] + '</span></div>';
+			
+				}
+			$('#node-details').append(html);
+			dialogDetails.dialog("open");		
+			});
+	}
 	$(function() {
-		var dialog, form;
+		var dialog, form, nodesArray;
 		$('#roleText').markItUp(mySettings);
-		$.post("NodeListServlet", {}, function(nodesArray) {
-			var nodes = nodesArray['message'];
-			for (var i = 0; i < nodes.length; i++) {
-				var node = nodes[i];
+		var self = this;
+		$.get("NodeListServlet", {}, function(nodesJson) {
+			nodesArray = nodesJson['jsonArrayNodes'];
+			for (var i = 0; i < nodesArray.length; i++) {
+				var node = nodesArray[i];
 				$("#nodes tbody").append(
 						"<tr>" + "<td>" + node.name + "</td>" + "<td>"
 								+ node.ipaddress + "</td>" + "<td>"
-								+ node.nodeRunList + "</td>" + "</tr>");
+								+ node.nodeRunList + "</td>" + "<td>"
+								+ "<a onclick=\"moreDetails(this)\" index="+ i +" nodeName=" +node.name+" style=\"cursor: pointer; cursor: hand;\">*click here*</a>" + "</td>" + "</tr>");
 			}
 		});
 		function createRole() {
@@ -114,6 +131,27 @@ div#nodes-contain table td,div#nodes-contain table th {
 			event.preventDefault();
 			createRole();
 		});
+		function hideDetails(){
+			$('#node-details')[0].innerHTML = '';
+			dialogDetails.dialog("close");
+			return true;
+		} 
+		dialogDetails = $("#dialog-details-form").dialog({
+			autoOpen : false,
+			height : 700,
+			width : 750,
+			modal : true,
+			buttons : {
+				"O.K" : hideDetails
+			},
+			close : function() {
+				form1[0].reset();
+			}
+		});
+		form1 = dialogDetails.find("form").on("submit", function(event) {
+			event.preventDefault();
+			hideDetails();
+		});
 		$("#create-role").button().on("click", function() {
 			dialog.dialog("open");
 		});
@@ -130,11 +168,20 @@ div#nodes-contain table td,div#nodes-contain table th {
 					<th>Name</th>
 					<th>IP</th>
 					<th>RunList</th>
+					<th>More Details</th>
 				</tr>
 			</thead>
 			<tbody>
 			</tbody>
 		</table>
+	</div>
+	<div id="dialog-details-form" title="More Details">
+		<p class="validateTips"></p>
+		<form>
+			<fieldset>
+				<div id="node-details" class="ui-widget ui-widget-content"></div>
+			</fieldset>
+		</form>
 	</div>
 	<div id="dialog-form" title="Create new Role">
 		<p class="validateTips">All form fields are required.</p>
