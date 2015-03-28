@@ -76,7 +76,7 @@ public class SampleFormServlet extends HttpServlet {
 			}
 			
 			ChefClient chefClient = new ChefClient();
-			System.out.println(chefClient.getCookbooks());
+			System.out.println("List of cookbooks "+ chefClient.getCookbooks());
 			//System.out.println(chefClient.getRoles());
 			//System.out.println(chefClient.getEnvironments());
 			//System.out.println(chefClient.getNodes());
@@ -124,18 +124,15 @@ public class SampleFormServlet extends HttpServlet {
 		}
 	}
 
-	private void createJsonAndReturn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void createJsonAndReturn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, JSONException{
 		request.setCharacterEncoding("utf8");
 		response.setContentType("application/json");
+		ChefClient chefClient = new ChefClient();
+		System.out.println("List of cookbooks "+ chefClient.getCookbooks());
 		PrintWriter out = response.getWriter();
-		JSONObject obj = new JSONObject();
+		JSONObject obj = new JSONObject(chefClient.getCookbooks());
 		System.out.println("Done");
-		try {
-			obj.put("message", "hello from " + request.getParameter("name"));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		//
+		
 		out.print(obj);
 	}
 	/**
@@ -143,12 +140,17 @@ public class SampleFormServlet extends HttpServlet {
 	 *      response)
 	 */
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("test");
+		System.out.println("Select value from the dropdown"+ request.getParameter("name"));
 		makeSystemCall();
 		makeWebServiceCall();
-		createJsonAndReturn(request, response);
+		try {
+			createJsonAndReturn(request, response);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
