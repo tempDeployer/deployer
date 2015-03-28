@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>List of Chef Nodes - Rockhopper</title>
+<script src="jquery-2.1.3.js"></script>
+</head>
+<body>
+	Name :
+	<input type="text" id="nameValue" size="20" />
+	<button type="button" onclick="callServer()">Call server123</button>
+	Server response :
+	<input type="text" id="serverResp" size="40" />
+	<script type="text/javascript">
+		function callServer() {
+			$.get("NodeListServlet", {
+				name : document.getElementById("nameValue").value
+			}, function(data) {
+				document.getElementById("serverResp").value = data['message'];
+				//alert("Data Loaded: " + data['message']);
+				alert("Data Loaded: " + data);
+			});
+		}
+	</script>
+</body>
+</html>

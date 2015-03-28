@@ -20,7 +20,7 @@ public class ApiMethod {
 	protected String pemPath = "";
 	private String methodName = "GET";
 	
-	private int returnCode;
+	private int returnCode = 0;
 	
 	public ApiMethod(String methodName){
 		client = new HttpClient();
@@ -60,9 +60,8 @@ public class ApiMethod {
 			method.addRequestHeader("X-Ops-Authorization-" + (i + 1), auth_headers[i]);
 		}
 		
-		int code = 0;
 		try {
-			code = client.executeMethod(method);
+			this.returnCode = client.executeMethod(method);
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

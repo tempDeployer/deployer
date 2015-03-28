@@ -12,39 +12,75 @@
     <title>Chef Orchestrator</title>
 
     <!-- Bootstrap core files -->
-    <link href="/DeployerApplication/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/DeployerApplication/js/bootstrap.js" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="js/bootstrap.js" rel="stylesheet">
     <script src="jquery-2.1.3.js"></script>
 
     <!-- Custom styles for this template -->
-    <link href="/DeployerApplication/css/nodes.css" rel="stylesheet">
-    <link href="/DeployerApplication/css/grid.css" rel="stylesheet">
+    <link href="css/nodes.css" rel="stylesheet">
+    <link href="css/grid.css" rel="stylesheet">
     
   </head>
 
   <body>
 
-    <div class="container" id="thing">
+    <div class="container">
     
     <div class="page-header">
     <h1>Chef Orchestrator</h1>
     </div>
     
-    <div class="container" id="stuff">
-    
-    <p>Node Information: </p>
-      <div class="row">
-        <div class="col-md-12">
-        Some Info
-        <br><br/><br><br/><br><br/><br>
-        some more info
-        </div>
-      </div>
-    
-    <br><br/><br><br/><br><br/><br><br/><br><br/><br><br/><br><br/>
-    
     <div class="container" id="node-info">
-    <p>Node Information: </p>
+    <script type="text/javascript">
+    function createGrids(nodeName, IP, runList)
+    {
+    	var grid = "<p>Node Information: <\/p> <div class=\"row\"> <div class=\"col-md-12\"> Some Info <br><br/><br>" + nodeName + "<br/><br><br/><br> some more info </div> </div>";
+    	var grid1 = "<div class=\"row\"> <div class=\"col-md-2\">" + nodeName + "</div> <div class=\"col-md-2\">" + IP + "</div> <div class=\"col-md-6\">" + runList + "</div> <div class=\"col-md-1\"> </div> <div class=\"col-md-1\">Run</div> </div>";
+    	var grid2 = "<div class=\"row\"> <div class=\"col-md-2\">" + nodeName + "</div> <div class=\"col-md-2\">" + IP + "</div> <div class=\"col-md-6\">" + runList + "</div> <div class=\"col-md-1\"> <button type=\"button\" class=\"btn btn-default\"> <span class=\"glyphicon glyphicon-info-sign\"></span> </button> </div> <div class=\"col-md-1\">Run</div> </div>";
+        var grid3 = "<div class=\"row\"> <div class=\"col-md-2\">" + nodeName + "</div> <div class=\"col-md-2\">" + IP + "</div> <div class=\"col-md-6\">" + runList + "</div> <div class=\"col-md-1\"> <a href=\"\" onclick=\'\'><span style=\"font-size:8em;\" class=\"glyphicon-info-sign\"></span></a> </div> <div class=\"col-md-1\">Run</div> </div>";
+    	$(grid2).appendTo($.find("#node-info"));
+    }
+    
+    function addPlus()
+    {
+    	var plus = "<a href=\"\" onclick=\'return createGrid();\'><span style=\"font-size:8em;\" class=\"glyphicon glyphicon-plus\"></span></a>";
+    	$(plus).appendTo($.find("#node-info"));
+    }
+    
+    function callServer() {
+		$.post("NodesServlet", function(data) {
+			var jsonData = Object.keys(data);
+			for (key in jsonData) {
+				createGrids(jsonData[key]);
+			}
+			//document.getElementById("serverResp").value = stuff;
+			//alert("Data Loaded: " + stuff);
+		});
+		
+		/*$.post("NodeListServlet", {}, function(nodesJson) {
+			nodes = nodesJson['jsonArrayNodes'];
+			for (var i = 0; i < nodes.length; i++) {
+				var node = nodes[i];
+				alert(node.name);
+				createGrids(node.name, node.ipaddress, node.nodeRunList);
+			}
+		});*/
+		
+	}
+    
+    callServer();
+    //addPlus();
+    </script>
+    
+    <div class="row">
+        <div class="col-md-2">Node Name</div>
+        <div class="col-md-2">IP</div>
+        <div class="col-md-6">Run List</div>
+        <div class="col-md-1">More Info</div>
+        <div class="col-md-1">Run</div>
+    </div>
+    
+    <!-- <p>Node Information: </p>
       <div class="row">
         <div class="col-md-12">
         Some Info
@@ -52,33 +88,52 @@
         some more info
         </div>
       </div>
-    </div>
+    </div> -->
     
-    </div>
+    <!-- <br><br/><br><br/><br><br/>
     
-    <br><br/><br><br/><br><br/>
-    
-    <!-- <button type="button" class="btn btn-default">
+    <button type="button" class="btn btn-default">
       <span style="font-size:8em;" class="glyphicon glyphicon glyphicon-plus"></span>
     </button> # onclick='createGrid()' "/../DeployerApplication/test1.html" -->
     
     <script type="text/javascript">
     function createGrid()
     {
-    	//$("#node-info").append("#stuff");
-    	//return false;
-    	//window.alert(11);
-    	var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
-        var txt3 = document.createElement("p");
-        txt3.innerHTML = "Text.";               // Create text with DOM
-        $("body").append(txt2, txt3);     // Append new elements
+        var grid = "<p>Node Information: <\/p> <div class=\"row\"> <div class=\"col-md-12\"> Some Info <br><br/><br><br/><br><br/><br> some more info </div> </div>";
+      	$(grid).appendTo($.find("#node-info"));
+        return false;
     }
     </script>
     
-    <button type="button" onClick='createGrid()' class="btn btn-default">
-    </button>
+    <!-- <button type="button" onClick='createGrid()' class="btn btn-default">
+    </button> -->
     
-    <a href="#" onclick='createGrid()'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a>
+    <!-- Name :
+	<input type="text" id="nameValue" size="20" />
+	<button type="button" onclick="callServer()">Call server</button>
+	Server response :
+	<input type="text" id="serverResp" size="40" />
+	<script type="text/javascript">
+		function callServer() {
+			$.post("NodesServlet", function(data) {
+				var jsonData = Object.keys(data);
+				var stuff = "";
+				for (key in jsonData) {
+					stuff += jsonData[key];
+				}
+				document.getElementById("serverResp").value = stuff;
+				alert("Data Loaded: " + stuff);
+			});
+		}
+	</script> -->
+    
+    <!-- <a href="" onclick='return createGrid();'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a> -->
+    
+    </div>
+    
+    <div class="container" id="plusButton">
+    <a href="" onclick='return createGrid();'><span style="font-size:8em;" class="glyphicon glyphicon-plus"></span></a>
+    </div>
     
     </div>
     
