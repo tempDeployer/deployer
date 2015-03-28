@@ -2,6 +2,8 @@ package org.kana.rockhopper.chef;
 
 import java.io.Serializable;
 
+import org.json.JSONObject;
+
 public class NodePojo implements Serializable {
 	
 	/**
@@ -23,8 +25,22 @@ public class NodePojo implements Serializable {
 	private String os;
 	private String ipaddress;
 	private String recipes;
+	private String macaddress;
+	private String virtualization;
 	
 	
+	public String getVirtualization() {
+		return virtualization;
+	}
+	public void setVirtualization(String virtualization) {
+		this.virtualization = virtualization;
+	}
+	public String getMacaddress() {
+		return macaddress;
+	}
+	public void setMacaddress(String macaddress) {
+		this.macaddress = macaddress;
+	}
 	public String getChef_type() {
 		return chef_type;
 	}

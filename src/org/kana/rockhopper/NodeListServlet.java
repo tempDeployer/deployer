@@ -55,7 +55,7 @@ public class NodeListServlet extends HttpServlet {
 		if (request.getParameter("nodeName") != null) {
 			PrintWriter out = response.getWriter();
 			ChefClient cc = new ChefClient();
-			String jsonNode = cc.getNode(request.getParameter("nodeName"));
+			String jsonNode = cc.getNode("nodeName");
 			if (jsonNode != null) {
 				try {
 					JSONObject jo = getNodeDetails(jsonNode);
@@ -101,6 +101,8 @@ private JSONObject getNodeDetails(String nodeJson) {
 					nodePojo.setOs(jsonObj.getJSONObject("automatic").getString("os"));
 					nodePojo.setIpaddress(jsonObj.getJSONObject("automatic").getString("ipaddress"));
 					nodePojo.setRecipes(jsonObj.getJSONObject("automatic").getJSONArray("recipes").toString());
+					nodePojo.setMacaddress(jsonObj.getJSONObject("automatic").getString("macaddress"));
+					nodePojo.setVirtualization(jsonObj.getJSONObject("automatic").getJSONObject("virtualization").toString());					
 				}
 				else {
 					nodePojo.setUptime("Node bootstrapped yet");
@@ -113,11 +115,12 @@ private JSONObject getNodeDetails(String nodeJson) {
 					nodePojo.setOs("Node bootstrapped yet");
 					nodePojo.setIpaddress("Node bootstrapped yet");
 					nodePojo.setRecipes("Node bootstrapped yet");
-					
+					nodePojo.setMacaddress("Node bootstrapped yet");
+					nodePojo.setVirtualization("Node bootstrapped yet");
 				}
 
 				jsonObjForUI = new JSONObject(objMapper.writer().withDefaultPrettyPrinter().writeValueAsString(nodePojo));
-			
+				
 		}
 		catch (JsonParseException e) {
 			e.printStackTrace();
@@ -189,7 +192,6 @@ private JSONObject getNodeDetails(String nodeJson) {
 		PrintWriter out = response.getWriter();
 		JSONObject obj = new JSONObject();
 		try {
-			System.out.println("jsonArrayNodes ::: "+jsonArrayNodes);
 			obj.put("jsonArrayNodes", jsonArrayNodes);
 		} 
 		catch (Exception e) {
