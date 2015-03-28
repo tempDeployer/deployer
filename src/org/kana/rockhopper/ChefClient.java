@@ -3,6 +3,7 @@ package org.kana.rockhopper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kana.rockhopper.chefapi.ChefApiClient;
+import org.kana.rockhopper.chefapi.method.Get;
 
 public class ChefClient {
 
@@ -70,7 +71,11 @@ public class ChefClient {
 	}
 	
 	public String getNode(String nodeName) {
-		return cac.get("/nodes/"+nodeName).execute().getResponseBodyAsString();
+		Get get = (Get) cac.get("/nodes/"+nodeName).execute();
+		if (get.getReturnCode() == 200) {
+			return get.getResponseBodyAsString();
+		}
+		return null;
 	}
 	
 	public String updateNode(String nodeName, String updateMessage) {
