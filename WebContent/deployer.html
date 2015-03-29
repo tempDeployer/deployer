@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css"
 	href="markitup/sets/default/style.css">
 <link href="css/bootstrap.min.css" rel="stylesheet">
-	
+
 <!-- jQuery -->
 <script src="jquery-2.1.3.js"></script>
 <script type="text/javascript" src="markitup/jquery.markitup.js"></script>
@@ -26,9 +26,10 @@ body {
 }
 
 .right {
-    position: absolute;
-    right: 5px;
+	position: absolute;
+	right: 5px;
 }
+
 label,input {
 	display: block;
 }
@@ -53,10 +54,12 @@ h1 {
 .ui-dialog .ui-state-error {
 	padding: .3em;
 }
+
 html {
-	font-size:20px;
-	-webkit-tap-highlight-color:rgba(0,0,0,0)
+	font-size: 20px;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
 }
+
 div#nodes-contain {
 	margin: 20px 0;
 }
@@ -80,55 +83,97 @@ div#nodes-contain table td,div#nodes-contain table th {
 </style>
 
 <script>
-	function bootStrapNode(node){
+	function bootStrapNode(node) {
 		//alert('called');
 	}
-	function moreDetails(node){
+	function moreDetails(node) {
 		var nodeName = $(node).attr('nodeName');
 		$('#nodes-contain').loader($data);
 		$.post("NodeListServlet", {
-			nodeName : nodeName}, 
-			function(nodeJson) {
-			 var html = '';
-				for (key in nodeJson) {
-				html += '<div><span>' + key + ' : </span><span>' + nodeJson[key] + '</span></div>';
-			
-				}
+			nodeName : nodeName
+		}, function(nodeJson) {
+			var html = '';
+			for (key in nodeJson) {
+				html += '<div><span>' + key + ' : </span><span>'
+						+ nodeJson[key] + '</span></div>';
+
+			}
 			$('#node-details').append(html);
 			dialogDetails.dialog("open");
-			 $.loader.close(true);
-
+			$.loader.close(true);
 		});
 	}
-	function runRecipies(node){
+	function runRecipies(node) {
 		alert($(node).attr('nodeName'));
 	}
 	$(function() {
-		 $data = {
-	                autoCheck: 32,
-	                size: 16,  
-	                bgColor: '#FFF',   
-	                bgOpacity: 0.6,    
-	                fontColor: false,  
-	                isOnly: true
-	     };
+		$data = {
+			autoCheck : 32,
+			size : 16,
+			bgColor : '#FFF',
+			bgOpacity : 0.6,
+			fontColor : false,
+			isOnly : true
+		};
 		var dialog, form, nodesArray;
 		$('#roleText').markItUp(mySettings);
 		var self = this;
 		$('#nodes-contain').loader($data);
-		$.get("NodeListServlet", {}, function(nodesJson) {
-			nodesArray = nodesJson['jsonArrayNodes'];
-			for (var i = 0; i < nodesArray.length; i++) {
-				var node = nodesArray[i];
-				$("#nodes tbody").append(
-						"<tr>" + "<td>" + node.name + "</td>" + "<td>"
-								+ node.ipaddress + "</td>" + "<td>"
-								+ node.nodeRunList + "</td>" + "<td>"
-								+ "<a onclick=\"moreDetails(this)\" title=\"Show more details\" index="+ i +" nodeName=" +node.name+" class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>" + "</td>" + "<td>"
-								+ "<a onclick=\"runRecipies(this)\" title=\"Run\" index="+ i +" nodeName=" +node.name+" class=\"glyphicon glyphicon-triangle-right\" style=\"cursor: pointer; cursor: hand;\"></a>" + "</td>" + "</tr>");
-			}
-			 $.loader.close(true);
-		});
+		$
+				.get(
+						"NodeListServlet",
+						{},
+						function(nodesJson) {
+							nodesArray = nodesJson['jsonArrayNodes'];
+							for (var i = 0; i < nodesArray.length; i++) {
+								var node = nodesArray[i];
+								var runlistToDisplay = node.nodeRunList
+										.replace('["', "").replace('"]', "");
+								if (runlistToDisplay.length > 10) {
+									runlistToDisplay = runlistToDisplay
+											.concat("...");
+								}
+								if (node.isMachineUp == true) {
+									var mcRunningOrNotIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Machine State - Running\" class=\"glyphicon glyphicon glyphicon-thumbs-up\" style=\"cursor: pointer; cursor: hand; background-color: #7ddc1f; width: 15px; height: 15px;\"></span>"
+									var exportVMXIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Create VMX file\" class=\"glyphicon glyphicon glyphicon-compressed\" style=\"cursor: pointer; cursor: hand; background-color: #77aaff; width: 15px; height: 15px;\"></span>"
+								} else {
+									var mcRunningOrNotIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Machine State - Stopped\" class=\"glyphicon glyphicon glyphicon-thumbs-down\" style=\"cursor: pointer; cursor: hand; background-color: red; width: 15px; height: 15px;\"></span>"
+									var exportVMXIcon = ""
+								}
+								$("#nodes tbody")
+										.append(
+												"<tr>" + "<td>"
+														+ node.name
+														+ "</td>"
+														+ "<td>"
+														+ node.ipaddress
+														+ "</td>"
+														+ "<td><span title=\" "
+														+ runlistToDisplay
+																.replace("...",
+																		"")
+														+ "\" style=\"cursor: pointer; cursor: hand;\">"
+														+ runlistToDisplay
+														+ "</span></td>"
+														+ "<td>"
+														+ "<a onclick=\"moreDetails(this)\" title=\"Show more details\" index="
+														+ i
+														+ " nodeName="
+														+ node.name
+														+ " class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>"
+														+ mcRunningOrNotIcon
+														+ exportVMXIcon
+														+ "</td>"
+														+ "<td>"
+														+ "<a onclick=\"runRecipies(this)\" title=\"Run\" index="
+														+ i
+														+ " nodeName="
+														+ node.name
+														+ " class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>"
+														+ "</td>" + "</tr>");
+							}
+							$.loader.close(true);
+						});
 		function createRole() {
 			//$('#markItUp').value
 			$.post("CreateRoleServlet", {
@@ -160,11 +205,11 @@ div#nodes-contain table td,div#nodes-contain table th {
 			event.preventDefault();
 			createRole();
 		});
-		function hideDetails(){
+		function hideDetails() {
 			$('#node-details')[0].innerHTML = '';
 			dialogDetails.dialog("close");
 			return true;
-		} 
+		}
 		dialogDetails = $("#dialog-details-form").dialog({
 			autoOpen : false,
 			height : 700,
@@ -230,8 +275,10 @@ div#nodes-contain table td,div#nodes-contain table th {
 		</form>
 	</div>
 	<button id="create-role">Create new role</button>
-	<span class="right" id="plusButton">
-	    <a title="Import Node" href="bootstrap.html" id="createNode" onclick="bootStrapNode(this)" class="glyphicon glyphicon-plus" style="font-size:2em; cursor: pointer; cursor: hand;"></a>
-    </span>
+	<span class="right" id="plusButton"> <a title="Import Node"
+		href="bootstrap.html" id="createNode" onclick="bootStrapNode(this)"
+		class="glyphicon glyphicon-plus"
+		style="font-size: 2em; cursor: pointer; cursor: hand;"></a>
+	</span>
 </body>
 </html>
