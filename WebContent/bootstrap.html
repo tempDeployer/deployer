@@ -56,11 +56,12 @@ $(document).ready(function(){$("#runlistOptions").hide();
      var name = this.value; 
       $.post("GetCookbooksList", { name : name }, function(data) {
   		var obj  = Object.keys(data);
+  		var html = "";
+  		$('#runlistOptions').children().remove();
   		$.each(data, function (i, obj){
-  	     var option = "<option value=" + i +  ">" + i + "</option>"
-  	     $('#runlistOptions').append(option);
+  	     html += "<option value=" + i +  ">" + i + "</option>"
   	     });
- 		
+ 	     $('#runlistOptions').append(html);
  		});
       $("#runlistOptions").show();
       });
