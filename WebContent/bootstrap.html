@@ -6,14 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Page to view list of cookbooks and roles">
+    <meta name="author" content="Veenu Agarwal">
     <link rel="icon" href="../../favicon.ico">
 
     <title>Node Bootstrap</title>
 <link rel="stylesheet"
       href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-      <link href="/DeployerApplication/css/signin.css" rel="stylesheet">
+      <link href="css/signin.css" rel="stylesheet">
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
 	<script src="http://code.jquery.com/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
@@ -32,10 +32,47 @@
   </head>
 <script >
 $(document).ready(function(){
+	$('.list-group').hide(); });
+	
+$(document).ready(function(){
 	$('.open-modal').click(function(){
 		$('#DemoModal').modal('show');
 	}); 
 });
+
+$(document).ready(function(){$("#runlistOptions").hide();
+  					
+   	$('#runlist').change(function(){			
+     var name = this.value; 
+      $.post("GetCookbooksList", { name : name }, function(data) {
+  		var obj  = Object.keys(data);
+  		$.each(data, function (i, obj){
+  	     var option = "<option value=" + i +  ">" + i + "</option>"
+  	     $('#runlistOptions').append(option);
+  	     });
+ 		
+ 		});
+      $("#runlistOptions").show();
+      });
+		
+ 					 
+$("#update").click(function(){
+	 var r = $("#runlist :selected").text();
+	 var list_header = "<li class=list-group-item>" +r+"</li>"
+	 $('.list-group').append(list_header);
+	 var foo = [];
+	  $("#runlistOptions :selected").each(function(i, selected) {
+		   
+		   foo[i] =$(selected).text();
+		   var label = "<li class=list-group-item>" + foo[i]+"</li>"   
+		   $('.list-group').append(label);
+		   
+	  });
+	
+	  $(".list-group").show();
+   });
+});	        
+ 
 </script>
   <body>
 
@@ -58,6 +95,10 @@ $(document).ready(function(){
   		<input type="text" class="form-control" id="ip" placeholder="Enter machineIP" required >
 </div>
 
+ <div class="form-group col-sm-offset-2 col-sm-4 ">
+<ul class="list-group"></ul>
+</div>
+
 	<div class="form-group col-sm-offset-2 col-sm-8">
  	<button type = button class="btn btn-info btn-md open-modal">
  	<span class="glyphicon glyphicon glyphicon-plus"></span>RunList</button>
@@ -67,8 +108,8 @@ $(document).ready(function(){
  	<button type="button" class="btn btn-info btn-md pull-right btn-lg">
     <span class="glyphicon glyphicon-chevron-right"></span> Bootstrap</button>
   </div>
-  
-   <!-- Modal Contents -->
+  </div>
+ <!-- Modal Contents -->
     <div id="DemoModal" class="modal fade">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -77,24 +118,41 @@ $(document).ready(function(){
             <h4 class="modal-title">Update Runlist</h4>
           </div>
           <div class="modal-body">
-            <p>Select cookbooks, recipes or roles to be added to runlist</p>
-          <!--   <p class="text-warning"><small>Would you like to download it now.</small>-->
-            <select class="form-control">
+            <p>Select cookbooks, recipes or roles to be added to runlist</p> 
+        <!--      <p class="text-warning"><small>Would you like to download it now.</small> -->
+        	<div class = "form-group">
+            <select class="form-control" id = "runlist">
+            <option value="roles">Choose here</option>
     		<option value="roles">Roles</option>
     		<option value="cookbooks">Cookbooks</option>
-   			 <option value="recipes">Recipes</option>
     		<option value="environments">Environments</option>
-   			 <option value="five">Five</option>
-			</select>
+   			 
+   			 </select> 
+   			 </div>
+  
+  	<!--  	<label for="sel1">Select list:</label> -->
+  	<div class = "form-group ">
+  		<select  class="form-control" id="runlistOptions" multiple="multiple" >	
+  </select>
+  </div>
+
+     <!--    <select id="runlistOptions" multiple="multiple" class="eItems">
+     	
+       </select>
+            -->	
+            
+         
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Update</button>
+          <button type="submit" class="btn btn-primary btn-md pull -right" id="update" data-dismiss="modal">Update </button>
+          <!--   <button type="button" class="btn btn-primary">Update</button> -->
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
     </div>
 </div>
+
     <!-- </div> /container -->
 
 
