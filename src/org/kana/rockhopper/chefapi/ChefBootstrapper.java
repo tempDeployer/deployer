@@ -5,7 +5,8 @@ import java.io.InputStreamReader;
 
 public class ChefBootstrapper {
 	
-	private static final String WORKING_DIR = "C:/crepo"; //C:\Users\gcoia\Work\centos69repo\cookbooks
+	//private static final String WORKING_DIR = "C:\\Users\\gcoia\\Work\\centos69repo\\cookbooks"; //C:\Users\gcoia\Work\centos69repo\cookbooks
+	private static final String WORKING_DIR = "C:/crepo";
 	
 	public void bootstrapLinuxNode(String ip, String userName, String password) {
 		try {
