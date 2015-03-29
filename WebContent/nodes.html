@@ -48,23 +48,22 @@
     }
     
     function callServer() {
-		$.post("NodesServlet", function(data) {
+		/*$.post("NodesServlet", function(data) {
 			var jsonData = Object.keys(data);
 			for (key in jsonData) {
 				createGrids(jsonData[key]);
 			}
 			//document.getElementById("serverResp").value = stuff;
 			//alert("Data Loaded: " + stuff);
-		});
+		});*/
 		
-		/*$.post("NodeListServlet", {}, function(nodesJson) {
+		$.get("NodeListServlet", {}, function(nodesJson) {
 			nodes = nodesJson['jsonArrayNodes'];
 			for (var i = 0; i < nodes.length; i++) {
 				var node = nodes[i];
-				alert(node.name);
 				createGrids(node.name, node.ipaddress, node.nodeRunList);
 			}
-		});*/
+		});
 		
 	}
     
