@@ -120,6 +120,10 @@ div#nodes-contain table td,div#nodes-contain table th {
 			nodesArray = nodesJson['jsonArrayNodes'];
 			for (var i = 0; i < nodesArray.length; i++) {
 				var node = nodesArray[i];
+				var runlistToDisplay = node.nodeRunList.replace('["',"").replace('"]',"");
+				if(runlistToDisplay.length > 10) {
+					runlistToDisplay = runlistToDisplay.concat("...");
+				}
 				if (node.isMachineUp==true) {
 					var mcRunningOrNotIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Machine State - Running\" class=\"glyphicon glyphicon glyphicon-thumbs-up\" style=\"cursor: pointer; cursor: hand; background-color: #7ddc1f; width: 15px; height: 15px;\"></span>"
 					var exportVMXIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Create VMX file\" class=\"glyphicon glyphicon glyphicon-compressed\" style=\"cursor: pointer; cursor: hand; background-color: #77aaff; width: 15px; height: 15px;\"></span>"
@@ -130,8 +134,8 @@ div#nodes-contain table td,div#nodes-contain table th {
 				}
 				$("#nodes tbody").append(
 						"<tr>" + "<td>" + node.name + "</td>" + "<td>"
-								+ node.ipaddress + "</td>" + "<td>"
-								+ node.nodeRunList + "</td>" + "<td>"
+								+ node.ipaddress + "</td>" + "<td><span title=\" "+ runlistToDisplay.replace("...","") +"\" style=\"cursor: pointer; cursor: hand;\">"
+								+ runlistToDisplay + "</span></td>" + "<td>"
 								+ "<a onclick=\"moreDetails(this)\" title=\"Show more details\" index="+ i +" nodeName=" +node.name+" class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>" 
 								+ mcRunningOrNotIcon + exportVMXIcon + "</td>" + "<td>"
 								+ "<a onclick=\"runRecipies(this)\" title=\"Run\" index="+ i +" nodeName=" +node.name+" class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>" + "</td>" + "</tr>");
