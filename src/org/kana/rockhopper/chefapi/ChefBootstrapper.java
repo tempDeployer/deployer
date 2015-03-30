@@ -4,28 +4,34 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 
 public class ChefBootstrapper {
 	
 	//private static final String WORKING_DIR = "C:\\Users\\gcoia\\Work\\centos69repo\\cookbooks"; //C:\Users\gcoia\Work\centos69repo\cookbooks
-	//private static final String WORKING_DIR = "C:/crepo";
-	private static final String WORKING_DIR = "C:/ProjectPenguin/chef-repo";
+	private static final String WORKING_DIR = "C:/crepo";
+	private static final String LOGS_DIR = "C:/crepo/logs/";
+	//private static final String WORKING_DIR = "C:/ProjectPenguin/chef-repo";
 	String finalRunList = "";
-	private PrintWriter writer;
+	
 	public void bootstrapLinuxNode(String ip, String userName, String password) {
 		try {
+			File fout = new File(LOGS_DIR + "log-" + Math.random()*10 + ".txt");
+			FileOutputStream fos = new FileOutputStream(fout);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			
 			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s", WORKING_DIR, ip, userName, password));
 			p.waitFor();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				System.out.println(line);
+				bw.write(line);
+				bw.newLine();
 			}
+			bw.close();
 
 		} catch (Exception e) {
 
@@ -56,7 +62,12 @@ public class ChefBootstrapper {
 		
 		try {
 			
-			File fout = new File("C:/ProjectPenguin/console.txt");
+			if ((runlist == null || runlist.isEmpty()) || (runlistItem == null || runlistItem.isEmpty())) {
+				bootstrapLinuxNode(ip, userName, password);
+				return;
+			}
+			
+			File fout = new File(LOGS_DIR + "log-" + Math.random()*10 + ".txt");
 			FileOutputStream fos = new FileOutputStream(fout);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 		 
