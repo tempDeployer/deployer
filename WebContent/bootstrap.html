@@ -16,6 +16,15 @@
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
 	<script src="http://code.jquery.com/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="markitup/jquery.markitup.js"></script>
+
+<!-- markItUp! toolbar settings -->
+<script type="text/javascript" src="markitup/sets/default/set.js"></script>
+<link href="spinner/style.css" rel="stylesheet">
+<script src="spinner/jquery-loader.js" type="text/javascript"></script>
+<link rel="stylesheet" href="jquery-ui/jquery-ui.css">
+<script src="jquery-ui/jquery-ui.js"></script>
+
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- <script src="../../assets/js/ie-emulation-modes-warning.js"></script> -->
@@ -31,6 +40,15 @@
 
 function bootstrapNode() 
 {
+	$data = {
+			autoCheck : 32,
+			size : 16,
+			bgColor : '#FFF',
+			bgOpacity : 0.6,
+			fontColor : false,
+			isOnly : true
+		};
+	$('#bootstrap').loader($data);
 	var runlistItems = [];
 	var myValues = [];
 	var ip = document.getElementById('ip').value;
@@ -54,7 +72,7 @@ function bootstrapNode()
 		resource: myValues[0].toString(),
 		runlistItems: runlistItems.toString()
 	}, function() {
-		location.href = "deployer1.html";
+		location.href = "deployer.html";
 	});
 }
 
@@ -115,12 +133,13 @@ $("#update").click(function(){
 </style>
   <body>
 
+    <div id="bootstrap" class="ui-widget">
     <div class="container">
  	 <div class="page-header" id="header">
     <h1>Bootstrapping a Node</h1>
     
   </div>
-
+  
   <div class="form-group col-sm-offset-2 col-sm-8">
   		<label for="usr">Node Username:</label>
   		<input type="text" class="form-control" id="usr" placeholder="Enter username" required autofocus>
@@ -146,6 +165,7 @@ $("#update").click(function(){
  	<div class="form-group col-sm-offset-2 col-sm-8">
  	<button type="button" onclick="bootstrapNode()" class="btn btn-warning btn-md pull-right btn-lg">
     <span class="glyphicon glyphicon-chevron-right"></span> Bootstrap</button>
+  </div>
   </div>
   </div>
  <!-- Modal Contents -->
@@ -192,7 +212,6 @@ $("#update").click(function(){
         </div>
       </div>
     </div>
-</div>
 
     <!-- </div> /container -->
 
