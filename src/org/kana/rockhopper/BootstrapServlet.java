@@ -30,8 +30,13 @@ public class BootstrapServlet extends HttpServlet {
 		String ip = request.getParameter("ip");
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
+		String runlist = request.getParameter("resource");
+		String runlistItem= request.getParameter("runlistItems");
+		System.out.println("Stuff from UI" + ip +":"+userName+":"+password+":"+runlist+":"+runlistItem);
 		try {
-			bootstrapper.bootstrapLinuxNode(ip, userName, password);
+			//bootstrapper.bootstrapLinuxNode(ip, userName, password);
+			bootstrapper.bootstrapLinuxNodeWithRunList(ip, userName, password,runlist,runlistItem);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

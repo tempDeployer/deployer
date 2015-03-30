@@ -11,9 +11,9 @@ public class ChefClient {
 	//private static final String CHEF_USER = "gcoia";
 	//private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/team";
 
-	private static final String PEM_FILE_PATH = "C:/crepo/.chef/shrads.pem";
-	private static final String CHEF_USER = "shrads";
-	private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/team";
+	private static final String PEM_FILE_PATH = "C:/ProjectPenguin/chef-repo/.chef/veenu.pem";
+	private static final String CHEF_USER = "veenu";
+	private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/test";
 
 	private static ChefApiClient cac = new ChefApiClient(CHEF_USER, PEM_FILE_PATH, CHEF_SERVER_URL);
 
