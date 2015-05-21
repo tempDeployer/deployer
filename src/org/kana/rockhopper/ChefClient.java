@@ -8,11 +8,8 @@ import org.kana.rockhopper.chefapi.method.Get;
 public class ChefClient {
 
 
-	private static final String PEM_FILE_PATH = "C:/sc_projects/deployer/trunk/chef-repo/.chef/shrads.pem";
-	private static final String CHEF_USER = "shrads";
-	private static final String CHEF_SERVER_URL = "https://centos69.kana-test.com/organizations/team";
 
-	private static ChefApiClient cac = new ChefApiClient(CHEF_USER, PEM_FILE_PATH, CHEF_SERVER_URL);
+	private static ChefApiClient cac = new ChefApiClient(ConfigurationUtil.getKey("CHEF_USER"), ConfigurationUtil.getKey("PEM_FILE_PATH"), ConfigurationUtil.getKey("CHEF_SERVER_URL"));
 
 	public String getCookbooks() {	
 		return cac.get("/cookbooks").execute().getResponseBodyAsString();
