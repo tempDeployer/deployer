@@ -17,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kana.rockhopper.chef.NodePojo;
 import org.kana.rockhopper.chef.SimpleNodePojo;
-
+import org.kana.rockhopper.ConfigurationUtil;
 /**
  * Servlet implementation class NodeListServlet
  */
@@ -169,7 +169,15 @@ public class NodeListServlet extends HttpServlet {
 
 				snp.setName(jsonObj.getString("name"));
 				snp.setNodeRunList(jsonObj.getJSONArray("run_list").toString());
+				try{
+				String hostName = jsonObj.getJSONObject("automatic").getString("hostname") != null ? jsonObj.getJSONObject("automatic").getString("hostname") : "";
+				snp.setHostName(hostName);
+				}
+				catch(Exception e)
+				{
+					snp.setHostName("");
 
+				}
 				if (jsonObj.getJSONObject("automatic") != null
 						&& jsonObj.getJSONObject("automatic").length() > 0) {
 					snp.setIpaddress(jsonObj.getJSONObject("automatic")

@@ -10,6 +10,7 @@ public class SimpleNodePojo implements Serializable {
 	private String nodeRunList;
 	private String ipaddress;	
 	private boolean isMachineUp;
+	private String hostName;
 	
 	public String getIpaddress() {
 		return ipaddress;
@@ -17,7 +18,14 @@ public class SimpleNodePojo implements Serializable {
 	public void setIpaddress(String ipaddress) {
 		this.ipaddress = ipaddress;
 	}
-	
+
+	public String getHostName() {
+		return hostName;
+	}
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
 	public String getName() {
 		return name;
 	}

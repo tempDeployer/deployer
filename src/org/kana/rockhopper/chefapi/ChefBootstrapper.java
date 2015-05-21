@@ -6,22 +6,23 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+
+import org.kana.rockhopper.ConfigurationUtil;
 
 public class ChefBootstrapper {
 	
-	//private static final String WORKING_DIR = "C:\\Users\\gcoia\\Work\\centos69repo\\cookbooks"; //C:\Users\gcoia\Work\centos69repo\cookbooks
-	private static final String WORKING_DIR = "C:/crepo";
-	private static final String LOGS_DIR = "C:/crepo/logs/";
-	//private static final String WORKING_DIR = "C:/ProjectPenguin/chef-repo";
 	String finalRunList = "";
 	
 	public void bootstrapLinuxNode(String ip, String userName, String password) {
 		try {
-			File fout = new File(LOGS_DIR + "log-" + Math.random()*10 + ".txt");
+			String tStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
+			.format(new java.util.Date());
+			File fout = new File(ConfigurationUtil.getKey("LOGS_DIR") + "/" + tStamp + ".txt");
 			FileOutputStream fos = new FileOutputStream(fout);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 			
-			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s", WORKING_DIR, ip, userName, password));
+			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s", ConfigurationUtil.getKey("CHEF_WORKING_DIR"), ip, userName, password));
 			p.waitFor();
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -41,7 +42,7 @@ public class ChefBootstrapper {
 	public void bootstrapLinuxNode(String nodeName, String ip, String userName, String password) {
 		try {
 
-			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s -N %s", WORKING_DIR, ip, userName, password, nodeName));
+			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s -N %s", ConfigurationUtil.getKey("CHEF_WORKING_DIR"), ip, userName, password, nodeName));
 			p.waitFor();
 			
 			
@@ -67,7 +68,7 @@ public class ChefBootstrapper {
 				return;
 			}
 			
-			File fout = new File(LOGS_DIR + "log-" + Math.random()*10 + ".txt");
+			File fout = new File(ConfigurationUtil.getKey("LOGS_DIR") + "log-" + Math.random()*10 + ".txt");
 			FileOutputStream fos = new FileOutputStream(fout);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 		 
@@ -83,7 +84,7 @@ public class ChefBootstrapper {
 				finalRunList = "\'role[" + runlistItem + "]\'";
 			}
 			
-			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s -x %s -P %s -r %s --sudo", WORKING_DIR, ip, userName, password,finalRunList));
+			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s -x %s -P %s -r %s --sudo", ConfigurationUtil.getKey("CHEF_WORKING_DIR"), ip, userName, password,finalRunList));
 			p.waitFor();
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
