@@ -1,0 +1,15 @@
+OVF_TOOL_DIR=C:/Program Files (x86)/VMware/VMware Workstation/OVFTool
+WORKING_DIR=C:/sc_projects/deployer/trunk/chef-repo/
+ESX_USER=kana
+ESX_HOST=172.25.45.125
+ESX_PASSWORD=K@na181!
+AMAZON_ACCESS_KEY=
+AMAZON_SECRET_ACCESS_KEY=
+AMAZON_S3_FOLDER_NAME=verint
+PEM_FILE_PATH=C:/sc_projects/deployer/trunk/chef-repo/.chef/shrads.pem
+CHEF_USER=shrads
+CHEF_SERVER_URL=https://centos69.kana-test.com/organizations/team
+CHEF_WORKING_DIR=C:/sc_projects/deployer/trunk/chef-repo
+LOGS_DIR=C:/sc_projects/deployer/trunk/chef-repo/logs/
+EC2_API_TOOLS_DIR=C:/ec2-api-tools-1.7.3.2/bin/
+VMX_DEST_PATH=C:/Users/lmadan.VERINT/Desktop/
