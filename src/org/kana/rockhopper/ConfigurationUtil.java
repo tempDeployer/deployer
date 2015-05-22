@@ -20,7 +20,9 @@ public class ConfigurationUtil {
 				if (text.startsWith("//") || text.isEmpty())
 					continue;
 				String[] pairs = text.split("=");
-				systemVariables.put(pairs[0].trim(), pairs[1].trim());
+				if (pairs.length == 2) {
+					systemVariables.put(pairs[0].trim(), pairs[1].trim());
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -34,13 +36,12 @@ public class ConfigurationUtil {
 			}
 		}
 	}
-	
-	public static String getKey(String key)
-	{
+
+	public static String getKey(String key) {
 		return systemVariables.get(key);
 	}
-	
-	static{
+
+	static {
 		loadVariables();
 	}
 }
