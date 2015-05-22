@@ -81,7 +81,7 @@ public class KnifeVmxGeneration {
 			((ChannelExec) channel).setCommand(command);
 
 			java.io.FileOutputStream out = new java.io.FileOutputStream(
-					"C:/Users/lmadan.VERINT/Desktop/" + cloneName + ".tgz");
+					ConfigurationUtil.getKey("VMX_DEST_PATH") + cloneName + ".tgz");
 			channel.setOutputStream(out);
 			channel.setInputStream(null);
 			((ChannelExec) channel).setErrStream(System.err);
@@ -226,8 +226,8 @@ public class KnifeVmxGeneration {
 			byte[] buffer = new byte[1024];
 			BufferedInputStream bis = new BufferedInputStream(
 					sftpChannel.get("/vmfs/volumes/LocalDS1/" + cloneName));
-			File newFile = new File("C:/Users/lmadan.VERINT/Desktop/"
-					+ cloneName);
+			File newFile = new File(
+					ConfigurationUtil.getKey("VMX_DEST_PATH")	+ cloneName);
 			OutputStream os = new FileOutputStream(newFile);
 			BufferedOutputStream bos = new BufferedOutputStream(os);
 			int readCount; // System.out.println("Getting: " + theLine);
