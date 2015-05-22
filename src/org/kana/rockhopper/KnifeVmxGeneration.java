@@ -9,13 +9,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -83,7 +81,7 @@ public class KnifeVmxGeneration {
 			((ChannelExec) channel).setCommand(command);
 
 			java.io.FileOutputStream out = new java.io.FileOutputStream(
-					"C:/Users/lmadan.VERINT/Desktop/" + cloneName + ".tgz");
+					ConfigurationUtil.getKey("VMX_DEST_PATH") + cloneName + ".tgz");
 			channel.setOutputStream(out);
 			channel.setInputStream(null);
 			((ChannelExec) channel).setErrStream(System.err);
