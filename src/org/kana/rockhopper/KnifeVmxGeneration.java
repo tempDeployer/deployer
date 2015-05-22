@@ -226,8 +226,8 @@ public class KnifeVmxGeneration {
 			byte[] buffer = new byte[1024];
 			BufferedInputStream bis = new BufferedInputStream(
 					sftpChannel.get("/vmfs/volumes/LocalDS1/" + cloneName));
-			File newFile = new File("C:/Users/lmadan.VERINT/Desktop/"
-					+ cloneName);
+			File newFile = new File(
+					ConfigurationUtil.getKey("VMX_DEST_PATH")	+ cloneName);
 			OutputStream os = new FileOutputStream(newFile);
 			BufferedOutputStream bos = new BufferedOutputStream(os);
 			int readCount; // System.out.println("Getting: " + theLine);
