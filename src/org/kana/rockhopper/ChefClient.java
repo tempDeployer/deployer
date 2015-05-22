@@ -8,6 +8,7 @@ import org.kana.rockhopper.chefapi.method.Get;
 public class ChefClient {
 
 
+
 	private static ChefApiClient cac = new ChefApiClient(ConfigurationUtil.getKey("CHEF_USER"), ConfigurationUtil.getKey("PEM_FILE_PATH"), ConfigurationUtil.getKey("CHEF_SERVER_URL"));
 
 	public String getCookbooks() {	
