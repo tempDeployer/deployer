@@ -2,8 +2,6 @@ package org.kana.rockhopper.chef;
 
 import java.io.Serializable;
 
-import org.json.JSONObject;
-
 public class NodePojo implements Serializable {
 	
 	/**

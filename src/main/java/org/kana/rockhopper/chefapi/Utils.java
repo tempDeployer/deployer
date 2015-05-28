@@ -22,7 +22,7 @@ public class Utils {
 	
 	public static String sha1AndBase64(String inStr) {
 		MessageDigest md = null;
-		String outStr = null;
+
 		byte[] outbty = null;
 		try {
 			md = MessageDigest.getInstance("SHA-1"); 
@@ -52,7 +52,6 @@ public class Utils {
 
 			byte[] signature = instance.sign();
 			outStr = Base64.encode(signature);
-			String tmp = new String(outStr);
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
