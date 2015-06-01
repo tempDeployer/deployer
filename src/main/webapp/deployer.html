@@ -84,10 +84,10 @@ div#nodes-contain table td,div#nodes-contain table th {
 
 <script>
 	function generateVmxAndEc2(node) {
-		var hostName = $(node).attr('hostName');
+		var ipAddress = $(node).attr('ipAddress');
 		$('#nodes-contain').loader($data);
 		$.post("GenerateVmxServlet", {
-			hostName : hostName,
+			ipAddress : ipAddress,
 			deployEc2 : true
 		}, function(nodeJson) {
 			var html = '';
@@ -102,10 +102,10 @@ div#nodes-contain table td,div#nodes-contain table th {
 		});
 	}
 	function generateVmx(node){
-		var hostName = $(node).attr('hostName');
+		var ipAddress = $(node).attr('ipAddress');
 		$('#nodes-contain').loader($data);
 		$.post("GenerateVmxServlet", {
-			hostName : hostName,
+			ipAddress : ipAddress,
 			deployEc2 : false
 		}, function(nodeJson) {
 			var html = '';
@@ -163,8 +163,8 @@ div#nodes-contain table td,div#nodes-contain table th {
 					}
 					if (node.isMachineUp == true) {
 						var mcRunningOrNotIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Machine State - Running\" class=\"glyphicon glyphicon glyphicon-thumbs-up\" style=\"cursor: pointer; cursor: hand; background-color: #7ddc1f; width: 15px; height: 15px;\"></span>"
-						var exportVMXIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span hostName=" + node.hostName +" onclick=\"generateVmx(this)\" title=\"Create VMX file\" class=\"glyphicon glyphicon glyphicon-compressed\" style=\"cursor: pointer; cursor: hand; background-color: #77aaff; width: 15px; height: 15px;\"></span>"
-						var exportVMXIcon2 = "&nbsp;&nbsp;&nbsp;&nbsp;<span hostName=" + node.hostName +" onclick=\"generateVmxAndEc2(this)\" title=\"Create VMX file and deploy to Ec2\" class=\"glyphicon glyphicon glyphicon-compressed\" style=\"cursor: pointer; cursor: hand; background-color: #77aaff; width: 15px; height: 15px;\"></span>"
+						var exportVMXIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span ipAddress=" + node.ipaddress +" onclick=\"generateVmx(this)\" title=\"Create VMX file\" class=\"glyphicon glyphicon glyphicon-compressed\" style=\"cursor: pointer; cursor: hand; background-color: #77aaff; width: 15px; height: 15px;\"></span>"
+						var exportVMXAndEC2Icon = "&nbsp;&nbsp;&nbsp;&nbsp;<span ipAddress=" + node.ipaddress +" onclick=\"generateVmxAndEc2(this)\" title=\"Create VMX file and deploy to Ec2\" class=\"glyphicon glyphicon glyphicon-compressed\" style=\"cursor: pointer; cursor: hand; background-color: #77aaff; width: 15px; height: 15px;\"></span>"
 					} else {
 						var mcRunningOrNotIcon = "&nbsp;&nbsp;&nbsp;&nbsp;<span title=\"Machine State - Stopped\" class=\"glyphicon glyphicon glyphicon-thumbs-down\" style=\"cursor: pointer; cursor: hand; background-color: red; width: 15px; height: 15px;\"></span>"
 						var exportVMXIcon = ""
@@ -174,7 +174,7 @@ div#nodes-contain table td,div#nodes-contain table th {
 											+ "<td><span title=\" " + runlistToDisplay.replace("...", "") + "\" style=\"cursor: pointer; cursor: hand;\">"
 												+ runlistToDisplay + "</span> </td>"	
 											+ "<td>" + "<a onclick=\"moreDetails(this)\" title=\"Show more details\" index=" + i + " nodeName=" + node.name	+ " class=\"glyphicon glyphicon-info-sign\" style=\"cursor: pointer; cursor: hand;\"></a>"
-												+ mcRunningOrNotIcon + exportVMXIcon + exportVMXIcon2 + "</td>"
+												+ mcRunningOrNotIcon + exportVMXIcon + exportVMXAndEC2Icon + "</td>"
 											+ "<td>" + "<a onclick=\"runRecipies(this)\" title=\"Run\" index=" + i + " nodeName=" + node.name
 												+ " class=\"glyphicon glyphicon-triangle-right\" style=\"cursor: pointer; cursor: hand;\"></a>" + "</td>" + "</tr>");
 				  }
