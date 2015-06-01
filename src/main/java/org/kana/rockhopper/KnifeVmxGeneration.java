@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.URISyntaxException;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -30,15 +31,30 @@ import com.jcraft.jsch.SftpException;
 public class KnifeVmxGeneration {
 
 	private static final String command1 = "tar zcf /vmfs/volumes/LocalDS1/%s.tar /vmfs/volumes/LocalDS1/%s\n"; // Remote
+	
+	private static final String command2 = "rm -rf /vmfs/volumes/LocalDS1/%s \n"; // Remote
 																												// command
 																												// you
 																												// want
 
-	public void cloneVm(String hostName, BufferedWriter bw, String tStamp, String cloneName) {
+	public String cloneVm(String ipAddress, BufferedWriter bw, String tStamp) {
 		try {
-			
-			
-			Process p = Runtime
+			System.out.println(KnifeVmxGeneration.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String hostName = null;
+		String cloneName = null; 
+		try{
+			hostName = getVmName(ipAddress, bw);
+			if(hostName == null || hostName.length() == 0)
+			{
+				throw new Exception("vmName doesn't exists ");
+			}
+			cloneName = "clone" + hostName + tStamp;
+			System.out.println(hostName);
+						Process p = Runtime
 					.getRuntime()
 					.exec(String
 							.format("cmd /c cd %s && knife vsphere vm clone %s --template %s  --disable-customization",
@@ -56,6 +72,7 @@ public class KnifeVmxGeneration {
 		} catch (Exception e) {
 
 		}
+		return cloneName;
 	}
 
 	private void compressAndDownloadVm(String cloneName, BufferedWriter bw) {
@@ -106,14 +123,36 @@ public class KnifeVmxGeneration {
 			System.out.println("Downloaded the compressed image");
 			bw.write("Downloaded the compressed image : " + cloneName);
 			out.close();
-
+			deleteFromDisk(session, cloneName);
 		} catch (Exception e) {
 			System.out.println("Exception e : " + e);
 		} finally {
 			session.disconnect();
 		}
 	}
-
+	private String getVmName(String ipAddress, BufferedWriter bw) throws IOException
+	{
+		String vmName = null;
+		// TODO: Replace using the ruby vmoni with vSphere java API vijava or something equivalent.
+		String cmd = String
+				.format("cmd /c cd %s && ruby %s %s %s %s %s %s",
+						ConfigurationUtil.getKey("deployer.ruby.path"), ConfigurationUtil.getKey("deployer.ruby.clone_script"), ConfigurationUtil.getKey("deployer.vsphere.host"), ConfigurationUtil.getKey("deployer.vsphere.user"), ConfigurationUtil.getKey("deployer.vsphere.pass"), ConfigurationUtil.getKey("deployer.vsphere.dc"), ipAddress);
+		System.out.println(cmd);
+		Process p = Runtime
+				.getRuntime()
+				.exec(cmd);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				p.getInputStream()));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			bw.write(line);
+			bw.newLine();
+			// TODO : At this point #vmName: is the hard coded console to distinguish between error, nill, name.
+			if(line.contains("#vmName:"))
+				vmName = line.split("#vmName:")[1];
+		}
+		return vmName;
+	}
 	private static void uncompressTGZ(String dirPath, String file,
 			String extension, BufferedWriter bw) throws IOException {
 
@@ -162,6 +201,43 @@ public class KnifeVmxGeneration {
 				+ "got created");
 		bw.newLine();
 		System.out.println("untar completed successfully!!");
+	}
+
+	private static void deleteFromDisk(Session session, String cloneName)
+			throws JSchException {
+
+		try {
+
+			Channel channel = session.openChannel("shell");
+
+			// TODO: You will probably want to use your own input stream,
+			// instead of just reading a static string.
+			String cmd = String.format(command2, cloneName);
+			//
+			InputStream is = new ByteArrayInputStream(cmd.getBytes());
+			channel.setInputStream(is);
+			//
+			// // Set the destination for the data sent back (from the server)
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PrintStream ps = new PrintStream(out);
+			channel.setOutputStream(ps);
+			channel.connect(15 * 1000);
+			// // Wait thirty seconds for this demo to complete (ie: output to
+			// be
+			// // streamed to us).
+			String console = "";
+			while (!console.equals("~ # ")) {
+				String[] lines = out.toString().split("\n");
+				console = lines[lines.length - 1];
+				Thread.sleep(30 * 1000);
+			}
+			// Disconnect (close connection, clean up system resources)
+			channel.disconnect();
+		} catch (Exception e) {
+
+		} finally {
+			session.disconnect();
+		}
 	}
 
 	@SuppressWarnings("unused")

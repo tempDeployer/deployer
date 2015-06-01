@@ -8,6 +8,9 @@ Basic Development
 
 In order to get a basic development environment running the project should be imported in to Eclipse as a Maven project. You must update the contents of the deployer.properties file to the appropriate values for your system.
 
+copy vm_clone.rb to the any place and update deployer.properties with deployer.ruby.clone_script=location of file
+
+
 To run it right click on the following file:
 
 `deployer.launch`
