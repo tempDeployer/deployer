@@ -1,6 +1,9 @@
 package org.kana.rockhopper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.kana.rockhopper.chefapi.ChefBootstrapper;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -31,12 +34,21 @@ public class BootstrapServlet extends HttpServlet {
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String runlist = request.getParameter("resource");
-		String runlistItem= request.getParameter("runlistItems");
-		System.out.println("Stuff from UI" + ip +":"+userName+":"+password+":"+runlist+":"+runlistItem);
+		String runlistItem = request.getParameter("runlistItems");
+		//System.out.println(runlistItem);
+		JSONObject metadataObj = null;
+		String cookbooks = null;
+		String roles = null;
 		try {
-			//bootstrapper.bootstrapLinuxNode(ip, userName, password);
-			bootstrapper.bootstrapLinuxNodeWithRunList(ip, userName, password,runlist,runlistItem);
-			
+			metadataObj = new JSONObject(request.getParameter("runlistItems"));
+			cookbooks = metadataObj.optString("cookbooks");
+			roles = metadataObj.optString("roles");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			bootstrapper.bootstrapLinuxNodeWithRunList(ip, userName, password, cookbooks, roles);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
