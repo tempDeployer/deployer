@@ -13,28 +13,30 @@ import org.kana.rockhopper.ConfigurationUtil;
 
 public class ChefBootstrapper {
 
-	private void bootstrapLinuxNode(String ip, String userName, String password) throws IOException {
+	private void bootstrapLinuxNodeWithoutRunlist(String ip, String userName, String password) throws IOException {
 		String cmd = String.format(
 				"cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s",
 				ConfigurationUtil.getKey("deployer.chef.work"), ip, userName,
 				password);
-		bootStrapNode(cmd);
+		//bootStrapNode(cmd);
 
 	}
 
 	public void bootstrapLinuxNodeWithRunList(String ip, String userName,
-			String password, String runlist, String runlistItem) throws IOException {
+			String password, String cookbooks, String roles) throws IOException {
 		String finalRunList = "";
-		if ((runlist == null || runlist.isEmpty())
-				|| (runlistItem == null || runlistItem.isEmpty())) {
-			bootstrapLinuxNode(ip, userName, password);
+		if ((cookbooks == null || cookbooks.isEmpty())
+				&& (roles == null || roles.isEmpty())) {
+			bootstrapLinuxNodeWithoutRunlist(ip, userName, password);
 			return;
 		}
-
-		if (runlist.equalsIgnoreCase("Cookbooks")) {
-			finalRunList = buildArg(runlistItem, "recipe");
-		} else if (runlist.equalsIgnoreCase("Roles")) {
-			finalRunList = buildArg(runlistItem, "role");
+		if (roles != null && roles.length() > 0) {
+			finalRunList = buildArg(roles, "role");
+		} 
+		if (cookbooks != null && cookbooks.length() > 0) {
+			if(finalRunList.length() > 0)
+				finalRunList += ",";
+			finalRunList += buildArg(cookbooks, "recipe");
 		}
 		String cmd = String.format(
 				"cmd /c cd %s && knife bootstrap %s -x %s -P %s -r %s --sudo",
@@ -52,7 +54,6 @@ public class ChefBootstrapper {
 			finalRunList += "\'" + prefix + "[" + recipe + "]\',";
 		}
 		System.out.println(finalRunList);
-
 		finalRunList = finalRunList.substring(0, finalRunList.length() - 1);
 		System.out.println(finalRunList);
 		return finalRunList;
