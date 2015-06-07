@@ -61,7 +61,8 @@
 			userName : userName,
 			password : password,
 			runlistItems : JSON.stringify(self['metadata'])
-		}, function() {
+		}, function(data) {
+			alert('Node being bootstrapped, please refer ' + data['logfilePath'] + ' for log details');
 			location.href = "deployer.html";
 		});
 	}

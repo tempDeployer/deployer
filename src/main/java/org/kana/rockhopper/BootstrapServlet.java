@@ -2,9 +2,12 @@ package org.kana.rockhopper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kana.rockhopper.chefapi.ChefBoostrapperService;
 import org.kana.rockhopper.chefapi.ChefBootstrapper;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,16 +32,14 @@ public class BootstrapServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		ChefBootstrapper bootstrapper = new ChefBootstrapper();
+		
 		String ip = request.getParameter("ip");
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
-		String runlist = request.getParameter("resource");
-		String runlistItem = request.getParameter("runlistItems");
-		//System.out.println(runlistItem);
 		JSONObject metadataObj = null;
 		String cookbooks = null;
 		String roles = null;
+		String logFilePath = null;
 		try {
 			metadataObj = new JSONObject(request.getParameter("runlistItems"));
 			cookbooks = metadataObj.optString("cookbooks");
@@ -48,10 +49,25 @@ public class BootstrapServlet extends HttpServlet {
 			e1.printStackTrace();
 		}
 		try {
-			bootstrapper.bootstrapLinuxNodeWithRunList(ip, userName, password, cookbooks, roles);
+			String tStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
+			.format(new java.util.Date());
+			logFilePath = ConfigurationUtil.getKey("deployer.logs.dir") + "/" + tStamp + ".log";
+			Runnable bootstrapService = new ChefBoostrapperService(logFilePath, ip, userName, password, roles, cookbooks);
+			new Thread(bootstrapService).start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		request.setCharacterEncoding("utf8");
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		JSONObject resObj = new JSONObject();
+		try {
+			resObj.put("logfilePath", logFilePath);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		out.print(resObj);
 	}
 
 	protected void doPost(HttpServletRequest request,
