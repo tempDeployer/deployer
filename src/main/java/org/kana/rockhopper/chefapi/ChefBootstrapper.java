@@ -18,7 +18,7 @@ public class ChefBootstrapper {
 				"cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s",
 				ConfigurationUtil.getKey("deployer.chef.work"), ip, userName,
 				password);
-		//bootStrapNode(cmd);
+		bootStrapNode(cmd);
 
 	}
 

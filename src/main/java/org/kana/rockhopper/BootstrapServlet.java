@@ -33,9 +33,6 @@ public class BootstrapServlet extends HttpServlet {
 		String ip = request.getParameter("ip");
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
-		String runlist = request.getParameter("resource");
-		String runlistItem = request.getParameter("runlistItems");
-		//System.out.println(runlistItem);
 		JSONObject metadataObj = null;
 		String cookbooks = null;
 		String roles = null;
