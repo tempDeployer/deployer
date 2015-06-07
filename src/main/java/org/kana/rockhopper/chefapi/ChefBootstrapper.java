@@ -13,21 +13,22 @@ import org.kana.rockhopper.ConfigurationUtil;
 
 public class ChefBootstrapper {
 
-	private void bootstrapLinuxNodeWithoutRunlist(String ip, String userName, String password) throws IOException {
+	private void bootstrapLinuxNodeWithoutRunlist(String ip, String userName, String password, String logFilePath) throws IOException {
 		String cmd = String.format(
 				"cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s",
 				ConfigurationUtil.getKey("deployer.chef.work"), ip, userName,
 				password);
-		bootStrapNode(cmd);
+		bootStrapNode(cmd, logFilePath);
 
 	}
 
 	public void bootstrapLinuxNodeWithRunList(String ip, String userName,
-			String password, String cookbooks, String roles) throws IOException {
+			String password, String cookbooks, String roles, String logFilePath) throws IOException {
+		
 		String finalRunList = "";
 		if ((cookbooks == null || cookbooks.isEmpty())
 				&& (roles == null || roles.isEmpty())) {
-			bootstrapLinuxNodeWithoutRunlist(ip, userName, password);
+			bootstrapLinuxNodeWithoutRunlist(ip, userName, password, logFilePath);
 			return;
 		}
 		if (roles != null && roles.length() > 0) {
@@ -43,7 +44,7 @@ public class ChefBootstrapper {
 				ConfigurationUtil.getKey("deployer.chef.work"), ip, userName,
 				password, finalRunList);
 		System.out.println(cmd);
-		bootStrapNode(cmd);
+		bootStrapNode(cmd, logFilePath);
 	}
 
 	private static String buildArg(String runlistItem, String prefix) {
@@ -59,13 +60,10 @@ public class ChefBootstrapper {
 		return finalRunList;
 	}
 
-	private static void bootStrapNode(String cmd) throws IOException {
+	private static void bootStrapNode(String cmd, String logFilePath) throws IOException {
 		BufferedWriter bw = null;
 		try {
-			String tStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
-					.format(new java.util.Date());
-			File fout = new File(ConfigurationUtil.getKey("deployer.logs.dir")
-					+ "/" + tStamp + ".txt");
+			File fout = new File(logFilePath);
 			FileOutputStream fos = new FileOutputStream(fout);
 			bw = new BufferedWriter(new OutputStreamWriter(fos));
 			System.out.println("Executing cmd : " + cmd);
