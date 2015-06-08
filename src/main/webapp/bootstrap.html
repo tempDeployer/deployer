@@ -1,22 +1,26 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Page to view list of cookbooks and roles">
-    <meta name="author" content="Veenu Agarwal">
-    <link rel="icon" href="../../favicon.ico">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description"
+	content="Page to view list of cookbooks and roles">
+<meta name="author" content="Veenu Agarwal">
+<link rel="icon" href="../../favicon.ico">
 
-    <title>Node Bootstrap</title>
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-    <link href="css/signin.css" rel="stylesheet">
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
-	<script src="http://code.jquery.com/jquery.min.js"></script>
-	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="markitup/jquery.markitup.js"></script>
+<title>Node Bootstrap</title>
+<link rel="stylesheet"
+	href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link href="css/signin.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script
+	src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="markitup/jquery.markitup.js"></script>
 
 <!-- markItUp! toolbar settings -->
 <script type="text/javascript" src="markitup/sets/default/set.js"></script>
@@ -25,22 +29,20 @@
 <link rel="stylesheet" href="jquery-ui/jquery-ui.css">
 <script src="jquery-ui/jquery-ui.js"></script>
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <!-- <script src="../../assets/js/ie-emulation-modes-warning.js"></script> -->
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<!-- <script src="../../assets/js/ie-emulation-modes-warning.js"></script> -->
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-   
-  </head>
- 
-<script >
 
-function bootstrapNode() 
-{
-	$data = {
+</head>
+
+<script>
+	function bootstrapNode() {
+		$data = {
 			autoCheck : 32,
 			size : 16,
 			bgColor : '#FFF',
@@ -48,177 +50,192 @@ function bootstrapNode()
 			fontColor : false,
 			isOnly : true
 		};
-	$('#bootstrap').loader($data);
-	var runlistItems = [];
-	var myValues = [];
-	var ip = document.getElementById('ip').value;
-	var userName = document.getElementById('usr').value;
-	var password = document.getElementById('pwd').value;
-	 $("#runlist :selected").each(function(i, selected) {
-		   
-		  myValues[i] =$(selected).text();  
-	  });
-	
-	  $("#runlistOptions :selected").each(function(i, selected) {
-		   
-		  runlistItems[i] =$(selected).text();  
-	  });
-	
-	 
-	$.get("BootstrapServlet", {
-		ip : ip,
-		userName: userName,
-		password: password,
-		resource: myValues[0].toString(),
-		runlistItems: runlistItems.toString()
-	}, function() {
-		location.href = "deployer.html";
+		$('#bootstrap').loader($data);
+		var runlistItems = [];
+		var myValues = [];
+		var ip = document.getElementById('ip').value;
+		var userName = document.getElementById('usr').value;
+		var password = document.getElementById('pwd').value;
+		$.get("BootstrapServlet", {
+			ip : ip,
+			userName : userName,
+			password : password,
+			runlistItems : JSON.stringify(self['metadata'])
+		}, function(data) {
+			alert('Node being bootstrapped, please refer ' + data['logfilePath'] + ' for log details');
+			location.href = "deployer.html";
+		});
+	}
+
+	$(document).ready(function() {
+		$(this).find('.updateBtn').on("click",
+					$.proxy(self.updateBtnClicked, this, null));
+		$('.list-group').hide();
+		self['metadata'] = {};
+		$('.open-modal').click(function() {
+			$('#DemoModal').modal('show');
+		});
 	});
-}
+	function updateBtnClicked(event) {
+		var selectedValues = $("#runlistOptions :selected");
+		var values = '';
+		$('.list-group').empty();
+		if (selectedValues.length > 0) {
+			$.each(selectedValues, function(i, selected) {
+				values += $(selected).val() + ",";
+			});
+		}
+		self['metadata'][$("#runlist :selected").val()] = values.length > 0 ? values.substring(0,
+				values.length - 1) : values;
+		var finalHtml = '';
+		$.each(self['metadata'], function(metadata,metadataValue){
+			if(metadataValue.length > 0 )
+			{
+				var list_header = "<strong><li class=list-group-item value =" + metadata + ">"
+				+ $("#runlist :selected").text() + "</li></strong>"
+				var innerValues = metadataValue.split(','); 
+				var label = '';
+				$.each(innerValues, function(i,value){
+					label += "<li class=list-group-item value =" + value + ">"
+					+ value + "</li>"
+				});
+				if(label.length > 0)
+				{
+					finalHtml += list_header + label;
+				}
+			}
+		});
+		$('.list-group').append(finalHtml);
+		$(".list-group").show();
+	}
 
-$(document).ready(function(){
-	$('.list-group').hide(); 
+	$(document).ready(function() {
+		$("#runlistOptions").hide();
 
-	$('.open-modal').click(function(){
-		$('#DemoModal').modal('show');
-	}); 
-});
+		$('#runlist').change(function() {
+			var name = this.value;
+			$.post("GetCookbooksList", {
+				name : name
+			}, function(data) {
+				var values = data["value"];
+				var html = "";
+				var selectedListWithCommas = self['metadata'][data["metadata"]];
+				var selectedList = {};
+				if((selectedListWithCommas !== void(0)) && (selectedListWithCommas.length > 0))
+				{
+					var lists = selectedListWithCommas.split(",");
+					$.each(lists, function(i,item){
+						selectedList[item] = item;
+					});
+				}
+				$('#runlistOptions').children().remove();
+				$.each(values, function(i, obj) {
+					var selected = '';
+					if(selectedList[i])
+					{
+						selected = "selected";
+					}
+					html += "<option " + selected + " value=" + i +  ">" + i + "</option>"
+				});
+				$('#runlistOptions').append(html);
+			});
 
-$(document).ready(function(){
-	$("#runlistOptions").hide();
-  					
-   	$('#runlist').change(function(){			
-     var name = this.value; 
-      $.post("GetCookbooksList", { name : name }, function(data) {
-  		var obj  = Object.keys(data);
-  		var html = "";
-  		$('#runlistOptions').children().remove();
-  		$.each(data, function (i, obj){
-  	     html += "<option value=" + i +  ">" + i + "</option>"
-  	     });
- 	     $('#runlistOptions').append(html);
- 		});
-     
-      $("#runlistOptions").show();
-      });
-		
- 					 
-$("#update").click(function(){
-	 var r = $("#runlist :selected").text();
-	 var list_header = "<strong><li class=list-group-item>" +r+"</li></strong>"
-	 $('.list-group').append(list_header);
-	 var foo = [];
-	 var label;
-	  $("#runlistOptions :selected").each(function(i, selected) {
-		   
-		   foo[i] =$(selected).text();
-		    label = "<li class=list-group-item value =" + foo[i] + ">"+ foo[i]+"</li>"   
-		   $('.list-group').append(label);
-		   
-	  });
-	
-	  $(".list-group").show();
-	 
-   });
-});	   
-
+			$("#runlistOptions").show();
+		});
+	});
 </script>
 <style>
-
-.btn{
-    
-    color: #FFFFFF !important;
+.btn {
+	color: #FFFFFF !important;
 }
-
 </style>
-  <body>
+<body>
 
-    <div id="bootstrap" class="ui-widget">
-    <div class="container">
- 	 <div class="page-header" id="header">
-    <h1>Bootstrapping a Node</h1>
-    
-  </div>
-  
-  <div class="form-group col-sm-offset-2 col-sm-8">
-  		<label for="usr">Node Username:</label>
-  		<input type="text" class="form-control" id="usr" placeholder="Enter username" required autofocus>
-  </div>
-  <div class="form-group col-sm-offset-2 col-sm-8">
-  		<label for="pwd">Node Password:</label>
-  		<input type="password" class="form-control" id="pwd" placeholder="Enter password" required >
-</div>
- 	<div class="form-group col-sm-offset-2 col-sm-8">
-  		<label for="ip">Node IP:</label>
-  		<input type="text" class="form-control" id="ip" placeholder="Enter machineIP" required >
-</div>
+	<div id="bootstrap" class="ui-widget">
+		<div class="container">
+			<div class="page-header" id="header">
+				<h1>Bootstrapping a Node</h1>
 
- <div class="form-group col-sm-offset-2 col-sm-4 ">
-<ul class="list-group" id='list'></ul>
-</div>
+			</div>
 
-	<div class="form-group col-sm-offset-2 col-sm-8">
- 	<button type = button class="btn btn-warning btn-md open-modal">
- 	<span class="glyphicon glyphicon glyphicon-plus"></span>RunList</button>
-   </div>
-   
- 	<div class="form-group col-sm-offset-2 col-sm-8">
- 	<button type="button" onclick="bootstrapNode()" class="btn btn-warning btn-md pull-right btn-lg">
-    <span class="glyphicon glyphicon-chevron-right"></span> Bootstrap</button>
-  </div>
-  </div>
-  </div>
- <!-- Modal Contents -->
-    <div id="DemoModal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h4 class="modal-title">Update Runlist</h4>
-          </div>
-          <div class="modal-body">
-            <p>Select cookbooks, recipes or roles to be added to runlist</p> 
-        <!--      <p class="text-warning"><small>Would you like to download it now.</small> -->
-        	<div class = "form-group">
-            <select class="form-control" id="runlist">
-            <option value="choose here">Choose here</option>
-    		<option value="roles">Roles</option>
-    		<option value="cookbooks">Cookbooks</option>
-    		<option value="environments">Environments</option>
-   			 </select>
-   			 </div>
-   
-  	<!--  	<label for="sel1">Select list:</label> -->
-  	<div class = "form-group " id="runlist-container">
-  		<select  class="form-control" id="runlistOptions" multiple="multiple" >	
-  </select>
-  </div>
+			<div class="form-group col-sm-offset-2 col-sm-8">
+				<label for="usr">Node Username:</label> <input type="text"
+					class="form-control" id="usr" placeholder="Enter username" required
+					autofocus>
+			</div>
+			<div class="form-group col-sm-offset-2 col-sm-8">
+				<label for="pwd">Node Password:</label> <input type="password"
+					class="form-control" id="pwd" placeholder="Enter password" required>
+			</div>
+			<div class="form-group col-sm-offset-2 col-sm-8">
+				<label for="ip">Node IP:</label> <input type="text"
+					class="form-control" id="ip" placeholder="Enter machineIP" required>
+			</div>
 
-     <!--    <select id="runlistOptions" multiple="multiple" class="eItems">
-     	
-       </select>
-            -->	
-            
-         
-          </div>
-          <div class="modal-footer">
-          <button type="submit" class="btn btn-primary btn-md pull -right" id="update" data-dismiss="modal">Update </button>
-         
-	<!-- <button class="btn btn-primary btn-md pull-right" id="loading"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Updating...</button>-->
-  
-          <!--   <button type="button" class="btn btn-primary">Update</button> -->
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
+			<div class="form-group col-sm-offset-2 col-sm-4 ">
+				<ul class="list-group" id='list'></ul>
+			</div>
 
-    <!-- </div> /container -->
+			<div class="form-group col-sm-offset-2 col-sm-8">
+				<button type=button class="btn btn-warning btn-md open-modal">
+					<span class="glyphicon glyphicon glyphicon-plus"></span>RunList
+				</button>
+			</div>
+
+			<div class="form-group col-sm-offset-2 col-sm-8">
+				<button type="button" onclick="bootstrapNode()"
+					class="btn btn-warning btn-md pull-right btn-lg">
+					<span class="glyphicon glyphicon-chevron-right"></span> Bootstrap
+				</button>
+			</div>
+		</div>
+	</div>
+	<!-- Modal Contents -->
+	<div id="DemoModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h4 class="modal-title">Update Runlist</h4>
+				</div>
+				<div class="modal-body">
+					<p>Select cookbooks, recipes or roles to be added to runlist</p>
+					<!--      <p class="text-warning"><small>Would you like to download it now.</small> -->
+					<div class="form-group">
+						<select class="form-control" id="runlist">
+							<option value="choose here">Choose here</option>
+							<option value="roles">Roles</option>
+							<option value="cookbooks">Cookbooks</option>
+						</select>
+					</div>
+
+					<!--  	<label for="sel1">Select list:</label> -->
+					<div class="form-group " id="runlist-container">
+						<select class="form-control" id="runlistOptions"
+							multiple="multiple">
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit"
+						class="updateBtn btn btn-primary btn-md pull -right" id="update"
+						data-dismiss="modal">Update</button>
+
+					<!-- <button class="btn btn-primary btn-md pull-right" id="loading"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Updating...</button>-->
+
+					<!--   <button type="button" class="btn btn-primary">Update</button> -->
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- </div> /container -->
 
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
- 
-  </body>
- 
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
+
+</body>
+
 </html>

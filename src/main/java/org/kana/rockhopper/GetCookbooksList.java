@@ -18,53 +18,53 @@ import org.json.JSONObject;
 @WebServlet("/GetCookbooksList")
 public class GetCookbooksList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetCookbooksList() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public GetCookbooksList() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 		request.setCharacterEncoding("utf8");
-		  response.setContentType("application/json");
-		  PrintWriter out = response.getWriter();
-		  try {
-			  ChefClient chefClient = new ChefClient();
-			  JSONObject obj = new JSONObject();
-			  if(request.getParameter("name").equalsIgnoreCase("Cookbooks"))
-			  {
-				  obj = new JSONObject(chefClient.getCookbooks()); 
-				  System.out.println(obj);
-				  out.print(obj);
-				  
-			  }
-			  else if (request.getParameter("name").equalsIgnoreCase("Roles"))
-			  {
-				  obj = new JSONObject(chefClient.getRoles());  
-				  System.out.println(obj);
-				  out.print(obj);
-			  }
-		   
-		  } catch (JSONException e) {
-		   System.out.println(e.toString());
-		  }
-		  System.out.println("Done");
-		  
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		try {
+			ChefClient chefClient = new ChefClient();
+			JSONObject obj = new JSONObject();
+			String metadata = request.getParameter("name");
+			if (metadata.equalsIgnoreCase("Cookbooks")) {
+				obj = new JSONObject(chefClient.getCookbooks());
+			} else if (metadata.equalsIgnoreCase("Roles")) {
+				obj = new JSONObject(chefClient.getRoles());
+			}
+			JSONObject resObj = new JSONObject();
+			resObj.put("metadata", metadata);
+			resObj.put("value", obj);
+			out.print(resObj);
+		} catch (JSONException e) {
+			System.out.println(e.toString());
+		}
+		System.out.println("Done");
+
 	}
 
 }

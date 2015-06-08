@@ -44,18 +44,17 @@ public class GenerateVmxServlet extends HttpServlet {
 		response.setCharacterEncoding("utf8");
 		response.setContentType("application/json");
 
-		if (request.getParameter("hostName") != null) {
+		if (request.getParameter("ipAddress") != null) {
 			PrintWriter out = response.getWriter();
 			String tStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
 					.format(new java.util.Date());
 			File fos = new File(ConfigurationUtil.getKey("deployer.logs.dir") + "/"
 					+ tStamp + ".txt");
-			String hostName = request.getParameter("hostName");
-			String cloneName = "clone" + hostName + tStamp;
+			String ipAddress = request.getParameter("ipAddress");
 			BufferedWriter bw = new BufferedWriter(new FileWriter(fos));
 			KnifeVmxGeneration knifevmx = new KnifeVmxGeneration();
-			knifevmx.cloneVm(hostName,
-					 bw, tStamp, cloneName);
+			String cloneName = knifevmx.cloneVm(ipAddress,
+					 bw, tStamp);
 			if (Boolean.parseBoolean(request.getParameter("deployEc2"))) {
 				ConvertVmxToOvf convertToOva = new ConvertVmxToOvf();
 				String vmxDestPath = ConfigurationUtil.getKey("deployer.vmx.dest");
