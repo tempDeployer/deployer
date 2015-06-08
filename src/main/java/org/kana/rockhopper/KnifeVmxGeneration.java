@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.lang.SystemUtils;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -33,15 +34,22 @@ public class KnifeVmxGeneration {
 																												// command
 																												// you
 																												// want
+	
+	private static final String COMMAND = "cd %s && knife vsphere vm clone %s --template %s  --disable-customization";
 
 	public void cloneVm(String hostName, BufferedWriter bw, String tStamp, String cloneName) {
 		try {
 			
+			String command = COMMAND;
+			
+			if(SystemUtils.IS_OS_WINDOWS) {
+				command = "cmd /c "+command;
+			}
 			
 			Process p = Runtime
 					.getRuntime()
 					.exec(String
-							.format("cmd /c cd %s && knife vsphere vm clone %s --template %s  --disable-customization",
+							.format(command,
 									ConfigurationUtil.getKey("deployer.chef.work"), cloneName, hostName));
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					p.getInputStream()));

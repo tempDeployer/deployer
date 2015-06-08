@@ -8,21 +8,31 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 
+import org.apache.commons.lang.SystemUtils;
 import org.kana.rockhopper.ConfigurationUtil;
 
 public class ChefBootstrapper {
 	
 	String finalRunList = "";
 	
+	private static final String COMMAND = "cd %s && knife bootstrap %s --sudo -x %s -P %s";
+	private static final String COMMAND_WITH_RUNLIST = COMMAND+" -r %s";
+	
 	public void bootstrapLinuxNode(String ip, String userName, String password) {
 		try {
+			String command = COMMAND;
+			
+			if(SystemUtils.IS_OS_WINDOWS) {
+				command = "cmd /c "+command;
+			}
+			
 			String tStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
 			.format(new java.util.Date());
 			File fout = new File(ConfigurationUtil.getKey("deployer.logs.dir") + "/" + tStamp + ".txt");
 			FileOutputStream fos = new FileOutputStream(fout);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 			
-			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s", ConfigurationUtil.getKey("deployer.chef.work"), ip, userName, password));
+			Process p = Runtime.getRuntime().exec(String.format(command, ConfigurationUtil.getKey("deployer.chef.work"), ip, userName, password));
 			p.waitFor();
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -39,26 +49,6 @@ public class ChefBootstrapper {
 		}
 	}
 	
-	public void bootstrapLinuxNode(String nodeName, String ip, String userName, String password) {
-		try {
-
-			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s -N %s", ConfigurationUtil.getKey("deployer.chef.work"), ip, userName, password, nodeName));
-			p.waitFor();
-			
-			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			String line;
-			
-			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
-			
-			}
-
-		} catch (Exception e) {
-
-		}
-	}
 	public void bootstrapLinuxNodeWithRunList(String ip, String userName, String password,String runlist, String runlistItem ) {
 		
 		try {
@@ -84,7 +74,13 @@ public class ChefBootstrapper {
 				finalRunList = "\'role[" + runlistItem + "]\'";
 			}
 			
-			Process p = Runtime.getRuntime().exec(String.format("cmd /c cd %s && knife bootstrap %s -x %s -P %s -r %s --sudo", ConfigurationUtil.getKey("deployer.chef.work"), ip, userName, password,finalRunList));
+			String command = COMMAND_WITH_RUNLIST;
+			
+			if(SystemUtils.IS_OS_WINDOWS) {
+				command = "cmd /c "+command;
+			}
+			
+			Process p = Runtime.getRuntime().exec(String.format(command, ConfigurationUtil.getKey("deployer.chef.work"), ip, userName, password,finalRunList));
 			p.waitFor();
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
