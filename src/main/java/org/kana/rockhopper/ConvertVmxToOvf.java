@@ -8,19 +8,19 @@ import java.io.InputStreamReader;
 import org.apache.commons.lang.SystemUtils;
 
 public class ConvertVmxToOvf {
-	private static final String WINDOWS_COMMAND = "cmd /c cd %s && ovftool.exe %s %s.ovf";
-	private static final String LINUX_COMMAND = "cd %s && ovftool %s %s.ovf";
+	private static final String WINDOWS_COMMAND = "cmd /c cd %s && %s";
+	private static final String COMMAND = "ovftool %s %s.ovf";
 	
 	public void convert(String srcDir, String vmxName, String outputDir, BufferedWriter bw) throws IOException {
 		
 		try {
-			String command = WINDOWS_COMMAND;
+			String command = String.format(COMMAND, ConfigurationUtil.getKey("deployer.ovf.dir"), srcDir + vmxName +".vmx", outputDir + vmxName + ".ovf");
 			
-			if(SystemUtils.IS_OS_LINUX) {
-				command = LINUX_COMMAND;
+			if(SystemUtils.IS_OS_WINDOWS) {
+				command = String.format(WINDOWS_COMMAND, ConfigurationUtil.getKey("deployer.ovf.dir"), command);
 			}
 			
-			Process p = Runtime.getRuntime().exec(String.format(command, ConfigurationUtil.getKey("deployer.ovf.dir"), srcDir + vmxName +".vmx", outputDir + vmxName + ".ovf"));
+			Process p = Runtime.getRuntime().exec(command);
 			//p.waitFor();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line;

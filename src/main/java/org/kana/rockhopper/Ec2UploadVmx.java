@@ -9,9 +9,9 @@ import org.apache.commons.lang.SystemUtils;
 
 public class Ec2UploadVmx {
 	
-	private static final String COMMAND = "cd %s && ec2-import-instance %s -f VMDK -t r3.large -ax86_64 -b %s -o %s -w %s -p Linux --region us-west-1";
+	private static final String COMMAND = "ec2-import-instance %s -f VMDK -t r3.large -ax86_64 -b %s -o %s -w %s -p Linux --region us-west-1";
 
-	public void uploadVmxToS3(String vmName, BufferedWriter bw) throws IOException {
+	public void uploadVmxToS3(String vmdkPath, BufferedWriter bw) throws IOException {
 		try {
 			String command = COMMAND;
 			
@@ -19,7 +19,7 @@ public class Ec2UploadVmx {
 				command = "cmd /c "+command;
 			}
 			
-			Process p = Runtime.getRuntime().exec(String.format(command, ConfigurationUtil.getKey("deployer.aws.ec2.toolsdir"), vmName,  ConfigurationUtil.getKey("deployer.aws.s3.foldername"),  ConfigurationUtil.getKey("deployer.aws.accesskey"),  ConfigurationUtil.getKey("deployer.aws.secretkey")));
+			Process p = Runtime.getRuntime().exec(String.format(command, vmdkPath,  ConfigurationUtil.getKey("deployer.aws.s3.foldername"),  ConfigurationUtil.getKey("deployer.aws.accesskey"),  ConfigurationUtil.getKey("deployer.aws.secretkey")));
 			//p.waitFor();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line;
