@@ -7,42 +7,58 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 
+import org.apache.commons.lang.SystemUtils;
 import org.kana.rockhopper.ConfigurationUtil;
 
 public class ChefBootstrapper {
 
-	private void bootstrapLinuxNodeWithoutRunlist(String ip, String userName, String password, String logFilePath) throws IOException {
-		String cmd = String.format(
-				"cmd /c cd %s && knife bootstrap %s --sudo -x %s -P %s",
-				ConfigurationUtil.getKey("deployer.chef.work"), ip, userName,
-				password);
+	String finalRunList = "";
+
+	private static final String COMMAND = "knife bootstrap %s --sudo -x %s -P %s";
+	private static final String COMMAND_WITH_RUNLIST = COMMAND + " -r %s";
+
+	private void bootstrapLinuxNodeWithoutRunlist(String ip, String userName,
+			String password, String logFilePath) throws IOException {
+		String command = COMMAND;
+
+		if (SystemUtils.IS_OS_WINDOWS) {
+			command = "cmd /c " + command;
+		}
+
+		String cmd = String.format(command, ip, userName, password);
 		bootStrapNode(cmd, logFilePath);
 
 	}
 
 	public void bootstrapLinuxNodeWithRunList(String ip, String userName,
-			String password, String cookbooks, String roles, String logFilePath) throws IOException {
-		
+			String password, String cookbooks, String roles, String logFilePath)
+			throws IOException {
+
 		String finalRunList = "";
 		if ((cookbooks == null || cookbooks.isEmpty())
 				&& (roles == null || roles.isEmpty())) {
-			bootstrapLinuxNodeWithoutRunlist(ip, userName, password, logFilePath);
+			bootstrapLinuxNodeWithoutRunlist(ip, userName, password,
+					logFilePath);
 			return;
 		}
 		if (roles != null && roles.length() > 0) {
 			finalRunList = buildArg(roles, "role");
-		} 
+		}
 		if (cookbooks != null && cookbooks.length() > 0) {
-			if(finalRunList.length() > 0)
+			if (finalRunList.length() > 0)
 				finalRunList += ",";
 			finalRunList += buildArg(cookbooks, "recipe");
 		}
-		String cmd = String.format(
-				"cmd /c cd %s && knife bootstrap %s -x %s -P %s -r %s --sudo",
-				ConfigurationUtil.getKey("deployer.chef.work"), ip, userName,
-				password, finalRunList);
+
+		String command = COMMAND_WITH_RUNLIST;
+
+		if (SystemUtils.IS_OS_WINDOWS) {
+			command = "cmd /c " + command;
+		}
+
+		String cmd = String.format(command, ip, userName, password,
+				finalRunList);
 		System.out.println(cmd);
 		bootStrapNode(cmd, logFilePath);
 	}
@@ -60,7 +76,8 @@ public class ChefBootstrapper {
 		return finalRunList;
 	}
 
-	private static void bootStrapNode(String cmd, String logFilePath) throws IOException {
+	private static void bootStrapNode(String cmd, String logFilePath)
+			throws IOException {
 		BufferedWriter bw = null;
 		try {
 			File fout = new File(logFilePath);
