@@ -33,32 +33,35 @@ public class KnifeVmxGeneration {
 
 	private static final String command1 = "tar zcf " + DATASTORE_PATH + "/%s.tar /vmfs/volumes/LocalDS1/%s\n";
 
-	public String cloneVm(String ipAddress, BufferedWriter bw, String tStamp) {
+
+	public String cloneVm(String ipAddress, BufferedWriter bw, String tStamp) throws IOException {
 
 		String hostName = null;
 		String cloneName = null;
 
 		try {
 			hostName = VSphereService.getInstance().getVMNameByIPAddress(ipAddress);
-
 			if (hostName == null || hostName.length() == 0) {
 				throw new VSphereException("vmName doesn't exists ");
 			}
 			cloneName = "clone" + hostName + tStamp;
-
 			System.out.println("Found VM with name " + hostName);
-
+			bw.newLine();
+			bw.write("Staring cloning " +cloneName);
 			VSphereService.getInstance().cloneVM(hostName, cloneName);
-
+			bw.newLine();
+			bw.write("Done cloning " +cloneName);
+			bw.newLine();
+			bw.write("Staring Compressing and Downloading " +cloneName);
 			this.compressAndDownloadVm(cloneName, bw);
-
+			bw.newLine();
+			bw.write("Done with Compression and Download " +cloneName);
+			bw.newLine();
+			bw.write("Cleaning up from ESX server " +cloneName);
+			bw.newLine();
 			VSphereService.getInstance().removeVM(cloneName);
 
-			System.out.println("Uncompressing " + cloneName);
-
-			KnifeVmxGeneration.uncompressTGZ(ConfigurationUtil.getKey("deployer.vmx.dest"), cloneName, ".tgz", bw);
-
-		} catch (IOException | VSphereException e) {
+		} catch (VSphereException e) {
 			e.printStackTrace();
 		}
 
@@ -119,7 +122,7 @@ public class KnifeVmxGeneration {
 		}
 	}
 
-	private static void uncompressTGZ(String dirPath, String file, String extension, BufferedWriter bw)
+	public static void uncompressTGZ(String dirPath, String file, String extension, BufferedWriter bw)
 			throws IOException {
 
 		int BUFFER = 2048;
