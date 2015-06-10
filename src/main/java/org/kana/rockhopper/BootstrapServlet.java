@@ -2,8 +2,7 @@ package org.kana.rockhopper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.kana.rockhopper.chefapi.ChefBoostrapperService;
-import org.kana.rockhopper.chefapi.ChefBootstrapper;
+import org.kana.rockhopper.services.ChefBoostrapperService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
