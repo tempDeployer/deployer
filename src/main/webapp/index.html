@@ -84,29 +84,25 @@ div#nodes-contain table td,div#nodes-contain table th {
 
 <script>
 	function generateVmxAndEc2(node) {
-		var ipAddress = $(node).attr('ipAddress');
-		$('#nodes-contain').loader($data);
-		$.post("GenerateVmxServlet", {
-			ipAddress : ipAddress,
-			deployEc2 : true
-		}, function(nodeJson) {
-			var html = '';
-			for (key in nodeJson) {
-				html += '<div><span>' + key + ' : </span><span>'
-						+ nodeJson[key] + '</span></div>';
-
-			}
-			$('#node-details').append(html);
-			dialogDetails.dialog("open");
-			$.loader.close(true);
-		});
+		var r = confirm("Are you sure, you want to generate vmx and deploy to EC2!");
+		if (r == true) {
+			createVmx($(node).attr('ipAddress'), true);
+		} 		
 	}
+	
 	function generateVmx(node){
-		var ipAddress = $(node).attr('ipAddress');
+		var r = confirm("Are you sure, you want to generate vmx !");
+		if (r == true) {
+			createVmx($(node).attr('ipAddress'), false);
+		} 		
+	}
+	
+	function createVmx(ipAddress, deployEc2)
+	{
 		$('#nodes-contain').loader($data);
 		$.post("GenerateVmxServlet", {
 			ipAddress : ipAddress,
-			deployEc2 : false
+			deployEc2 : deployEc2
 		}, function(nodeJson) {
 			var html = '';
 			for (key in nodeJson) {
@@ -119,6 +115,7 @@ div#nodes-contain table td,div#nodes-contain table th {
 			$.loader.close(true);
 		});
 	}
+
 	function moreDetails(node) {
 		var nodeName = $(node).attr('nodeName');
 		$('#nodes-contain').loader($data);
