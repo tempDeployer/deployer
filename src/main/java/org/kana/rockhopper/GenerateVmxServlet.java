@@ -24,7 +24,7 @@ import org.kana.rockhopper.services.VmxService;
 @WebServlet("/GenerateVmxServlet")
 public class GenerateVmxServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	// comment to create a ew branch.
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -52,7 +52,7 @@ public class GenerateVmxServlet extends HttpServlet {
 			try {
 				String tStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 				Runnable vmxRunnable = new VmxService(tStamp, ip, Boolean.parseBoolean(request.getParameter("deployEc2")));
-				String filePath = ((VmxService)vmxRunnable).getLogfilePath();
+				String filePath = InetAddress.getLocalHost().getHostAddress() + " : " + ((VmxService)vmxRunnable).getLogfilePath();
 				System.out.println(filePath);
 				new Thread(vmxRunnable).start();
 				JSONObject jo = new JSONObject();
