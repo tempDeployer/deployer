@@ -1,6 +1,8 @@
-package org.kana.rockhopper.chefapi;
+package org.kana.rockhopper.services;
 
 import java.io.IOException;
+
+import org.kana.rockhopper.chefapi.ChefBootstrapper;
 
 public class ChefBoostrapperService implements Runnable{
 
