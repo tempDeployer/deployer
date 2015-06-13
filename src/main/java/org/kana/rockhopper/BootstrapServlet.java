@@ -6,6 +6,7 @@ import org.kana.rockhopper.services.ChefBoostrapperService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -61,7 +62,7 @@ public class BootstrapServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		JSONObject resObj = new JSONObject();
 		try {
-			resObj.put("logfilePath", logFilePath);
+			resObj.put("logfilePath", InetAddress.getLocalHost().getHostAddress() + " : " +logFilePath);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
