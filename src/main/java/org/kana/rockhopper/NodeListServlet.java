@@ -23,7 +23,7 @@ import org.kana.rockhopper.chef.SimpleNodePojo;
 @WebServlet("/NodeListServlet")
 public class NodeListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static final String bootpInProgressMsg = "Node is being bootstrapped.";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -115,18 +115,18 @@ public class NodeListServlet extends HttpServlet {
 				nodePojo.setVirtualization(jsonObj.getJSONObject("automatic")
 						.getJSONObject("virtualization").toString());
 			} else {
-				nodePojo.setUptime("Node bootstrapped yet");
-				nodePojo.setHostname("Node bootstrapped yet");
-				nodePojo.setFqdn("Node bootstrapped yet");
-				nodePojo.setOs_version("Node bootstrapped yet");
-				nodePojo.setPlatform_version("Node bootstrapped yet");
+				nodePojo.setUptime(bootpInProgressMsg);
+				nodePojo.setHostname(bootpInProgressMsg);
+				nodePojo.setFqdn(bootpInProgressMsg);
+				nodePojo.setOs_version(bootpInProgressMsg);
+				nodePojo.setPlatform_version(bootpInProgressMsg);
 				nodePojo.setCpu_total(0);
-				nodePojo.setPlatform("Node bootstrapped yet");
-				nodePojo.setOs("Node bootstrapped yet");
-				nodePojo.setIpaddress("Node bootstrapped yet");
-				nodePojo.setRecipes("Node bootstrapped yet");
-				nodePojo.setMacaddress("Node bootstrapped yet");
-				nodePojo.setVirtualization("Node bootstrapped yet");
+				nodePojo.setPlatform(bootpInProgressMsg);
+				nodePojo.setOs(bootpInProgressMsg);
+				nodePojo.setIpaddress(bootpInProgressMsg);
+				nodePojo.setRecipes(bootpInProgressMsg);
+				nodePojo.setMacaddress(bootpInProgressMsg);
+				nodePojo.setVirtualization(bootpInProgressMsg);
 			}
 
 			jsonObjForUI = new JSONObject(objMapper.writer()
@@ -186,7 +186,7 @@ public class NodeListServlet extends HttpServlet {
 					} else
 					snp.setIsMachineUp(false);
 				} else {
-					snp.setIpaddress("Node bootstrapped yet");
+					snp.setIpaddress(bootpInProgressMsg);
 					snp.setIsMachineUp(false);
 
 				}
