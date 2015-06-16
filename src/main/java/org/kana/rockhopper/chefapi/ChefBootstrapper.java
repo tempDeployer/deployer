@@ -81,6 +81,7 @@ public class ChefBootstrapper {
 		BufferedWriter bw = null;
 		try {
 			File fout = new File(logFilePath);
+			// tempProcess(fout);
 			FileOutputStream fos = new FileOutputStream(fout);
 			bw = new BufferedWriter(new OutputStreamWriter(fos));
 			System.out.println("Executing cmd : " + cmd);
@@ -94,6 +95,7 @@ public class ChefBootstrapper {
 				bw.write(line);
 				bw.newLine();
 			}
+			p.destroy();
 		} catch (Exception e) {
 			System.out.println("Exception : " + e);
 		} finally {
@@ -101,5 +103,4 @@ public class ChefBootstrapper {
 				bw.close();
 		}
 	}
-
 }

@@ -97,10 +97,9 @@ public class KnifeVmxGeneration {
 			((ChannelExec) channel).setErrStream(System.err);
 
 			channel.connect();
-
+			System.out.println("compressing and downloading");
+			bw.write("compressing and downloading");
 			while (true) {
-				System.out.println("compressing and downloading");
-				bw.write("compressing and downloading");
 				bw.newLine();
 				if (channel.isClosed()) {
 					System.out.println("exit-status: " + channel.getExitStatus());
