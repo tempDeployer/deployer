@@ -2,11 +2,11 @@ package org.kana.rockhopper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.kana.rockhopper.chefapi.ChefBoostrapperService;
-import org.kana.rockhopper.chefapi.ChefBootstrapper;
+import org.kana.rockhopper.services.ChefBoostrapperService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -29,7 +29,7 @@ public class BootstrapServlet extends HttpServlet {
 	public BootstrapServlet() {
 		super();
 	}
-	
+	// comment to create a ew branch.
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
@@ -62,7 +62,7 @@ public class BootstrapServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		JSONObject resObj = new JSONObject();
 		try {
-			resObj.put("logfilePath", logFilePath);
+			resObj.put("logfilePath", InetAddress.getLocalHost().getHostAddress() + " : " + logFilePath);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
